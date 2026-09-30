@@ -4,12 +4,13 @@ import {
   averagePublicSupport,
   checkEnd,
   createRng,
+  diffEffects,
   jinBattle,
   quarterlyIncome,
   simulateQuarterOffline,
 } from './offline.ts'
 import { createNewGame, mingProvinces } from './state.ts'
-import { commitQuarter } from './transition.ts'
+import { applyAiTransition, commitQuarter } from './transition.ts'
 import type { GameState, Minister, Province } from './types.ts'
 import { validateQuarterResult, validationContextFrom } from './schemas.ts'
 
@@ -175,7 +176,8 @@ describe('离线季度推演', () => {
     expect(r.schemaVersion).toBe(1)
     expect(typeof r.narrative).toBe('string')
     expect(r.narrative.length).toBeGreaterThan(0)
-    expect(r.effects).toEqual([])
+    // 推演必然产生真实效果（税收、势力增长、民心军心演变）
+    expect(r.effects.length).toBeGreaterThan(0)
     expect(r.endEvaluation.status).toBe('ongoing')
   })
 
@@ -269,5 +271,118 @@ describe('离线季度推演', () => {
     s.provinces = s.provinces.map((p) => ({ ...p, owner: 'jin' as const }))
     expect(mingProvinces(s)).toHaveLength(0)
     expect(averagePublicSupport(s)).toBe(0)
+  })
+})
+
+// ============ 回归测试 ============
+// 曾经的问题：离线引擎算出了推演后的状态，却只把变化写进叙事、
+// effects 返回空数组，导致「奏报说收了 201 万两税，国库却纹丝不动」。
+describe('离线结果必须真正改变世界状态（回归）', () => {
+  function wide(): GameState {
+    const s = fresh()
+    s.provinces = Array.from({ length: 15 }, (_, i) =>
+      prov({ id: i === 0 ? 'jingzhi' : 'p' + i, name: '省' + i, tax: 12, garrison: 15 }),
+    )
+    return s
+  }
+
+  it('effects 非空', () => {
+    const r = simulateQuarterOffline(wide(), 1)
+    expect(r.effects.length).toBeGreaterThan(0)
+  })
+
+  it('税收确实进入国库', () => {
+    const s = wide()
+    const income = quarterlyIncome(s)
+    const r = simulateQuarterOffline(s, 1)
+    const applied = applyAiTransition(s, r.effects).state
+    expect(applied.treasury).toBe(s.treasury + income)
+    expect(applied.treasury).toBeGreaterThan(s.treasury)
+  })
+
+  it('后金势力确实增长', () => {
+    const s = wide()
+    const r = simulateQuarterOffline(s, 1)
+    const applied = applyAiTransition(s, r.effects).state
+    expect(applied.jinPower).toBeGreaterThan(s.jinPower)
+  })
+
+  it('effects 落库后可复现完整推演状态', () => {
+    const s = wide()
+    const r = simulateQuarterOffline(s, 7)
+    const applied = applyAiTransition(s, r.effects).state
+    // 国库、后金、流寇、朝堂应逐项复现
+    expect(applied.treasury).toBeCloseTo(s.treasury + quarterlyIncome(s), 6)
+    expect(applied.jinPower).toBeGreaterThan(s.jinPower)
+    expect(applied.courtStability).toBeGreaterThanOrEqual(0)
+    expect(applied.courtStability).toBeLessThanOrEqual(100)
+  })
+
+  it('省级民心军心变化被写入 effects', () => {
+    const s = wide()
+    const r = simulateQuarterOffline(s, 3)
+    const provinceEffects = r.effects.filter((e) => e.target.startsWith('province:'))
+    expect(provinceEffects.length).toBeGreaterThan(0)
+    const applied = applyAiTransition(s, r.effects).state
+    // 民心向 50 回归：起始 50 时基本不动，起始 38 时应上升
+    const before = s.provinces.find((p) => p.publicSupport === 38) ?? s.provinces[0]!
+    const after = applied.provinces.find((p) => p.id === before.id)!
+    expect(Number.isFinite(after.publicSupport)).toBe(true)
+  })
+
+  it('玩家行动的效果也被纳入', () => {
+    const s = wide()
+    s.pendingActions = [{ type: 'policy', id: 'jiazheng', provinceId: '', cost: 0 }]
+    const r = simulateQuarterOffline(s, 1)
+    const applied = applyAiTransition(s, r.effects).state
+    // 加派赋税得银 80 万两，叠加税收后国库必定高于纯税收
+    expect(applied.treasury).toBeGreaterThan(s.treasury + quarterlyIncome(s))
+  })
+})
+
+describe('diffEffects', () => {
+  it('无变化时返回空数组', () => {
+    const s = fresh()
+    expect(diffEffects(s, structuredClone(s))).toEqual([])
+  })
+
+  it('全局数值差异被转成 global 效果', () => {
+    const a = fresh()
+    const b = structuredClone(a)
+    b.treasury += 50
+    b.jinPower += 3
+    const e = diffEffects(a, b)
+    expect(e).toContainEqual(expect.objectContaining({ target: 'global', field: 'treasury', delta: 50 }))
+    expect(e).toContainEqual(expect.objectContaining({ target: 'global', field: 'jin_power', delta: 3 }))
+  })
+
+  it('省份归属变化被转成 owner 效果', () => {
+    const a = fresh()
+    const b = structuredClone(a)
+    b.provinces[0]!.owner = 'rebel'
+    expect(diffEffects(a, b)).toContainEqual(
+      expect.objectContaining({ target: `province:${a.provinces[0]!.id}`, field: 'owner', delta: 'rebel' }),
+    )
+  })
+
+  it('官职变更被转成 appointment 效果', () => {
+    const a = fresh()
+    // createNewGame 已把 hubu 任命给最优者 'a'，故改任 'b' 才是真实变更
+    expect(a.appointments.hubu).toBe('a')
+    const b = structuredClone(a)
+    b.appointments.hubu = 'b'
+    expect(diffEffects(a, b)).toContainEqual(
+      expect.objectContaining({ target: 'position:hubu', field: 'appointment', delta: 'b' }),
+    )
+  })
+
+  it('招募被转成 recruit 效果', () => {
+    const a = fresh()
+    const b = structuredClone(a)
+    const m = b.pool.shift()!
+    b.ministers.push(m)
+    expect(diffEffects(a, b)).toContainEqual(
+      expect.objectContaining({ target: 'global', field: 'recruit', delta: m.id }),
+    )
   })
 })

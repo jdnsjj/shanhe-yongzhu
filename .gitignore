@@ -39,3 +39,8 @@ temp_*.png
 *.swp
 Thumbs.db
 desktop.ini
+
+# ---------- 验收截图 / 浏览器调试产物 ----------
+verify-*.png
+tmp-*/
+

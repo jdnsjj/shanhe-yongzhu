@@ -184,6 +184,70 @@ export function jinBattle(state: GameState, defendBonus: number): string {
   return '后金顿兵城下，损兵折将而退。（京畿军心+5，后金-8）'
 }
 
+/**
+ * 把「推演前 -> 推演后」的状态差异转换为标准 effects。
+ *
+ * 这样离线推演产出的结果能复用与 AI 完全相同的落库管线
+ * （applyAiTransition 的夹紧逻辑 + zod 协议校验 + 事务提交），
+ * 避免离线模式另起一套状态写入路径。
+ */
+export function diffEffects(before: GameState, after: GameState): AiEffect[] {
+  const effects: AiEffect[] = []
+
+  const pushGlobal = (field: string, delta: number, reason: string): void => {
+    if (Math.abs(delta) > 1e-9) effects.push({ target: 'global', field, delta, reason })
+  }
+  pushGlobal('treasury', after.treasury - before.treasury, '季度结算')
+  pushGlobal('court_stability', after.courtStability - before.courtStability, '朝堂演变')
+  pushGlobal('rebel_power', after.rebelPower - before.rebelPower, '流寇滋长')
+  pushGlobal('jin_power', after.jinPower - before.jinPower, '后金势长')
+
+  const beforeProv = new Map(before.provinces.map((p) => [p.id, p]))
+  for (const p of after.provinces) {
+    const b = beforeProv.get(p.id)
+    if (!b) continue
+    if (b.owner !== p.owner) {
+      effects.push({ target: `province:${p.id}`, field: 'owner', delta: p.owner, reason: '归属变更' })
+    }
+    const push = (field: string, delta: number, reason: string): void => {
+      if (Math.abs(delta) > 1e-9) effects.push({ target: `province:${p.id}`, field, delta, reason })
+    }
+    push('pop', p.publicSupport - b.publicSupport, '民心演变')
+    push('morale', p.militaryMorale - b.militaryMorale, '军心演变')
+    push('garrison', p.garrison - b.garrison, '兵力变动')
+    push('fort', Math.trunc(p.fort) - Math.trunc(b.fort), '城防变动')
+  }
+
+  const beforeMin = new Map(before.ministers.map((m) => [m.id, m]))
+  for (const m of after.ministers) {
+    const b = beforeMin.get(m.id)
+    if (b && Math.abs(m.loyalty - b.loyalty) > 1e-9) {
+      effects.push({ target: `minister:${m.id}`, field: 'loyalty', delta: m.loyalty - b.loyalty, reason: '忠诚变动' })
+    }
+  }
+  // 人才池 -> 朝廷（招募）
+  const beforeMinisterIds = new Set(before.ministers.map((m) => m.id))
+  for (const m of after.ministers) {
+    if (!beforeMinisterIds.has(m.id) && before.pool.some((p) => p.id === m.id)) {
+      effects.push({ target: 'global', field: 'recruit', delta: m.id, reason: '擢用在野人才' })
+    }
+  }
+
+  // 官职变更
+  for (const [pos, mid] of Object.entries(after.appointments)) {
+    if (before.appointments[pos as keyof typeof before.appointments] !== mid) {
+      effects.push({ target: `position:${pos}`, field: 'appointment', delta: mid ?? '', reason: '任命变更' })
+    }
+  }
+  for (const pos of Object.keys(before.appointments)) {
+    if (after.appointments[pos as keyof typeof after.appointments] === undefined) {
+      effects.push({ target: `position:${pos}`, field: 'appointment', delta: '', reason: '罢免' })
+    }
+  }
+
+  return effects
+}
+
 export type EndStatus = 'ongoing' | 'victory' | 'defeat'
 
 /** 终局判定（对应 _check_end）。 */
@@ -368,7 +432,9 @@ export function simulateQuarterOffline(state: GameState, seed: number): QuarterR
     quarterSummary: notes.join(' '),
     narrative: narrativeParts.join(' '),
     treasury: { delta: income },
-    effects: [],
+    // 关键：把推演后的真实状态差异交回标准管线落库，
+    // 否则叙事描述了变化、世界状态却毫无变化。
+    effects: diffEffects(state, next),
     events: [],
     battles: [],
     taskUpdates,

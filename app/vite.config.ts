@@ -22,6 +22,10 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    watch: {
+      // 浏览器调试配置、构建产物等不应触发 HMR 监听（否则 Windows 下会 EBUSY 崩溃）
+      ignored: ['**/tmp-*/**', '**/target/**', '**/dist/**', '**/.verify/**'],
+    },
   },
 
   test: {

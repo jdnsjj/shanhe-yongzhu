@@ -42,7 +42,7 @@ import {
   restoreTransaction,
 } from './domain/transition.ts'
 import type { ChatMessage, GameState, Minister, QuarterResult } from './domain/types.ts'
-import { SaveManager, TauriStorage } from './persist/storage.ts'
+import { LocalStorageAdapter, SaveManager, TauriStorage } from './persist/storage.ts'
 import type { ViewMode } from './map/viewmodes.ts'
 
 export type Screen = 'start' | 'game'
@@ -99,12 +99,22 @@ export interface GameStore {
 let toastSeq = 0
 const llm = new LlmClient()
 const ai = new AiOperations(llm)
-const saves = new SaveManager(new TauriStorage())
 
-/** 是否运行在 Tauri 环境（决定存档后端与离线引擎可用性）。 */
+/** 是否运行在 Tauri 环境（决定存档后端）。 */
 export function isTauri(): boolean {
   return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
 }
+
+/**
+ * 依运行环境选择存档后端。
+ * Tauri 下用 fs 插件写应用数据目录；纯浏览器（开发调试）退化为 localStorage，
+ * 否则在浏览器中调用 Tauri IPC 会抛错，导致新局无法进入。
+ */
+function createStorage(): SaveManager {
+  return new SaveManager(isTauri() ? new TauriStorage() : new LocalStorageAdapter())
+}
+
+const saves = createStorage()
 
 async function loadConfig(): Promise<Partial<LlmConfig>> {
   try {
