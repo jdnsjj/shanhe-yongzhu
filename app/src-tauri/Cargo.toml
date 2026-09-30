@@ -1,0 +1,29 @@
+[package]
+name = "shanhe-yongzhu"
+version = "0.1.0"
+description = "山河永驻 —— 明末崇祯题材「王朝末期拯救」模拟游戏"
+authors = ["ShanHe YongZhu"]
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+# Tauri 2 约定：业务逻辑放 lib，main.rs 仅作入口，便于测试与移动端复用
+name = "shanhe_yongzhu_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-fs = "2"
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true
