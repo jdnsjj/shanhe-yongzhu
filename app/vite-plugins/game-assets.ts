@@ -15,6 +15,13 @@ const MOUNTS: ReadonlyArray<readonly [string, string]> = [
   ['/assets', 'assets'],
 ]
 
+/**
+ * 仅开发期提供的单文件挂载。
+ * config.json 含 API Key，**故意不复制进 dist**，以免密钥被打进安装包；
+ * 生产环境由 Tauri 从应用数据目录读取。
+ */
+const DEV_ONLY_FILES: ReadonlyArray<readonly [string, string]> = [['/config.json', 'config.json']]
+
 const MIME: Readonly<Record<string, string>> = {
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
@@ -44,6 +51,17 @@ export function gameAssets(projectRoot: string): Plugin {
     configureServer(server) {
       server.middlewares.use((req: IncomingMessage, res, next) => {
         const url = (req.url ?? '').split('?')[0] ?? ''
+
+        // 开发期单文件（config.json）
+        for (const [route, rel] of DEV_ONLY_FILES) {
+          if (url !== route) continue
+          const file = path.resolve(projectRoot, rel)
+          if (!fs.existsSync(file)) return next()
+          res.setHeader('Content-Type', contentType(file))
+          fs.createReadStream(file).pipe(res)
+          return
+        }
+
         for (const [prefix, base] of dirs) {
           if (url !== prefix && !url.startsWith(prefix + '/')) continue
           const rel = decodeURIComponent(url.slice(prefix.length)).replace(/^\/+/, '')

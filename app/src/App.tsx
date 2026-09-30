@@ -1,12 +1,36 @@
 /**
- * 阶段 1 占位壳：仅用于验证 Vite + React + TS + Tauri 工具链可用。
- * 阶段 5 将由真实的开始界面 / 舆图 / HUD 取代。
+ * 应用根组件 —— 开始界面 / 游戏主界面的切换。
  */
+
+import { useEffect } from 'react'
+import { MapView } from './components/MapView.tsx'
+import { BottomBar, InfoPanel, RightMenu, StartScreen, ToastLayer, TopBar } from './components/Hud.tsx'
+import { DialogHost } from './components/Dialogs.tsx'
+import { useGame } from './store.ts'
+
 export function App() {
+  const screen = useGame((s) => s.screen)
+  const boot = useGame((s) => s.boot)
+
+  useEffect(() => {
+    void boot()
+  }, [boot])
+
   return (
-    <main className="boot">
-      <h1>山河永驻</h1>
-      <p>崇祯元年 · 工具链自检通过</p>
-    </main>
+    <div className="app">
+      {screen === 'start' ? (
+        <StartScreen />
+      ) : (
+        <>
+          <MapView />
+          <TopBar />
+          <RightMenu />
+          <InfoPanel />
+          <BottomBar />
+          <DialogHost />
+        </>
+      )}
+      <ToastLayer />
+    </div>
   )
 }
