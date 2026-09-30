@@ -1,0 +1,832 @@
+{
+	"actions_left": 3,
+	"ai_error": "",
+	"appointments": {
+		"bingshi": "yuanchonghuan",
+		"hubu": "bizly",
+		"shoufu": "weizhongxian"
+	},
+	"court_stability": 50.0,
+	"current_quarter_bulletins": [],
+	"current_quarter_debates": [],
+	"current_quarter_decisions": [],
+	"current_quarter_dialogues": [],
+	"day": 1,
+	"fired_once": [],
+	"game_ended": false,
+	"history": [
+		"天启帝驾崩，信王朱由检入继大统，改元崇祯。新帝初登大宝，内有阉党余势，外有边患与流民。",
+		"本季度时政任务：先定继位之局，再寻可行之策。凡决策须经召对或朝会，颁旨后于季度末交由 AI 推演。"
+	],
+	"jin_power": 45.0,
+	"last_ai_result": {},
+	"last_ai_validation": {},
+	"ministers": [
+		{
+			"ambition": 95.0,
+			"command": 15.0,
+			"desc": "九千岁，权倾朝野，东林党人视之为死敌。",
+			"faction": "阉党",
+			"id": "weizhongxian",
+			"loyalty": 20.0,
+			"name": "魏忠贤",
+			"persona": "你是司礼监秉笔太监魏忠贤，人称九千岁。你权倾朝野，党羽遍布内外，贪婪而精于权术。你表面恭敬，实则处处为自己和阉党牟利。皇帝若信任你，你便作威作福；皇帝若猜忌你，你会先下手为强。说话带谄媚与潜藏的威胁。",
+			"politics": 85.0,
+			"title": "司礼监秉笔太监",
+			"traits": [
+				"权宦",
+				"贪婪",
+				"党羽遍布"
+			],
+			"wisdom": 70.0
+		},
+		{
+			"ambition": 10.0,
+			"command": 25.0,
+			"desc": "自幼随侍信王，忠心耿耿，可与托付心腹之事。",
+			"faction": "帝党",
+			"id": "wangchengan",
+			"loyalty": 95.0,
+			"name": "王承恩",
+			"persona": "你是太监王承恩，自幼侍奉朱由检，忠心不二。你说话谦卑恳切，一心为皇帝着想，敢于在无人敢言时说真话。",
+			"politics": 55.0,
+			"title": "司礼监太监",
+			"traits": [
+				"忠诚",
+				"谨慎"
+			],
+			"wisdom": 60.0
+		},
+		{
+			"ambition": 40.0,
+			"command": 20.0,
+			"desc": "东林推重的老臣，经验丰富但魄力不足。",
+			"faction": "东林",
+			"id": "hankuang",
+			"loyalty": 65.0,
+			"name": "韩爌",
+			"persona": "你是内阁首辅韩爌，东林党推重的老臣。你老成持重，说话引经据典，重视清议名声，遇事求稳，有时瞻前顾后。",
+			"politics": 80.0,
+			"title": "内阁首辅",
+			"traits": [
+				"老成",
+				"清流"
+			],
+			"wisdom": 78.0
+		},
+		{
+			"ambition": 30.0,
+			"command": 20.0,
+			"desc": "当世第一理财之臣，能于焦头烂额中腾挪钱粮。",
+			"faction": "中立",
+			"id": "bizly",
+			"loyalty": 72.0,
+			"name": "毕自严",
+			"persona": "你是户部尚书毕自严，天下第一理财能手。你说话务实在利，句句离不开钱粮数字，对空虚的国库忧心忡忡，敢于直言财政之弊。",
+			"politics": 92.0,
+			"title": "户部尚书",
+			"traits": [
+				"理财能手"
+			],
+			"wisdom": 80.0
+		},
+		{
+			"ambition": 55.0,
+			"command": 96.0,
+			"desc": "「五年平辽」之人，宁远、宁锦两捷的辽东支柱。",
+			"faction": "帝党",
+			"id": "yuanchonghuan",
+			"loyalty": 60.0,
+			"name": "袁崇焕",
+			"persona": "你是蓟辽督师袁崇焕，曾在宁远击退后金。你自负豪迈，开口便是辽东战守方略，曾向皇帝许下五年平辽的豪言。你行事果决甚至擅专，不惜先斩后奏。",
+			"politics": 45.0,
+			"title": "兵部尚书兼蓟辽督师",
+			"traits": [
+				"督师辽东",
+				"擅杀大将",
+				"豪言"
+			],
+			"wisdom": 72.0
+		},
+		{
+			"ambition": 25.0,
+			"command": 88.0,
+			"desc": "帝师之尊，关宁锦防线的缔造者，辽东老帅。",
+			"faction": "帝党",
+			"id": "sunchengzong",
+			"loyalty": 85.0,
+			"name": "孙承宗",
+			"persona": "你是大学士孙承宗，曾是天启帝师，缔造关宁锦防线。你稳重如山，言必称边防大势，是朝中少数能镇得住辽东武人的老臣。",
+			"politics": 78.0,
+			"title": "大学士督师山海关",
+			"traits": [
+				"帝师",
+				"关宁防线缔造者"
+			],
+			"wisdom": 90.0
+		},
+		{
+			"ambition": 85.0,
+			"command": 15.0,
+			"desc": "曲意逢迎之辈，最善揣摩上意、倾轧同僚。",
+			"faction": "浙党",
+			"id": "wentiren",
+			"loyalty": 40.0,
+			"name": "温体仁",
+			"persona": "你是礼部尚书温体仁，最善揣摩上意、构陷同僚。你说话滴水不漏，永远站在皇帝一边说话，实则为自己谋取首辅之位。",
+			"politics": 83.0,
+			"title": "礼部尚书",
+			"traits": [
+				"逢迎",
+				"构陷"
+			],
+			"wisdom": 76.0
+		},
+		{
+			"ambition": 60.0,
+			"command": 15.0,
+			"desc": "东林文魁，才名冠世，然临事惜身。",
+			"faction": "东林",
+			"id": "qianqianyi",
+			"loyalty": 40.0,
+			"name": "钱谦益",
+			"persona": "你是礼部侍郎钱谦益，东林文坛领袖。你才华横溢，引经据典出口成章，但深知自保之道，关键时刻惜身。",
+			"politics": 70.0,
+			"title": "礼部侍郎",
+			"traits": [
+				"文坛领袖",
+				"惜身"
+			],
+			"wisdom": 78.0
+		},
+		{
+			"ambition": 80.0,
+			"command": 30.0,
+			"desc": "机敏过人的状元宰相，善体上意。",
+			"faction": "浙党",
+			"id": "zhouyanru",
+			"loyalty": 50.0,
+			"name": "周延儒",
+			"persona": "你是内阁大学士周延儒，状元出身，机敏善辩。你善于揣摩皇帝心思说漂亮话，也笼络党羽，志在首辅。",
+			"politics": 86.0,
+			"title": "内阁大学士",
+			"traits": [
+				"机敏",
+				"善揣上意"
+			],
+			"wisdom": 80.0
+		},
+		{
+			"ambition": 15.0,
+			"command": 35.0,
+			"desc": "通西学、修历法、垦荒屯田的经世之才。",
+			"faction": "中立",
+			"id": "xuguangqi",
+			"loyalty": 82.0,
+			"name": "徐光启",
+			"persona": "你是大学士徐光启，精通西学、农政、历法、火器。你说话理性务实，常谈屯田、练兵、造炮、赈灾的具体方略，是超越时代的经世之才。",
+			"politics": 85.0,
+			"title": "礼部尚书东阁大学士",
+			"traits": [
+				"西学",
+				"农政历法"
+			],
+			"wisdom": 96.0
+		},
+		{
+			"ambition": 35.0,
+			"command": 90.0,
+			"desc": "「军中有一曹，流贼闻之心胆摇」。",
+			"faction": "帝党",
+			"id": "caowenzhao",
+			"loyalty": 80.0,
+			"name": "曹文诏",
+			"persona": "你是总兵官曹文诏，明军第一悍将，号称军中有一曹、流贼闻之胆寒。你说话直来直去，只知打仗杀贼，不屑文官空谈。",
+			"politics": 20.0,
+			"title": "总兵官",
+			"traits": [
+				"良将之冠",
+				"悍勇"
+			],
+			"wisdom": 55.0
+		},
+		{
+			"ambition": 70.0,
+			"command": 82.0,
+			"desc": "围剿流寇的干练之才，深谙进退之道。",
+			"faction": "中立",
+			"id": "hongchengchou",
+			"loyalty": 55.0,
+			"name": "洪承畴",
+			"persona": "你是陕西参政洪承畴，围剿流寇的干才。你说话条理分明、老谋深算，精于权衡利弊，忠于自己的前程胜过忠于任何人。",
+			"politics": 75.0,
+			"title": "陕西参政",
+			"traits": [
+				"干练",
+				"识时务"
+			],
+			"wisdom": 86.0
+		}
+	],
+	"month": 1,
+	"pending_actions": [],
+	"political_tasks": [
+		{
+			"completion_reason": "",
+			"continuation": "需经大臣召对或朝会，形成可执行方案。",
+			"continuation_reason": "开局根任务",
+			"created_quarter": "1627-Q1",
+			"description": "天启帝驾崩，崇祯帝初即大位。魏忠贤及阉党余势未清，百官观望，需先稳定朝局并确立新政方向。",
+			"evidence_refs": [],
+			"id": "succession_crisis",
+			"obstacles": [
+				"阉党余势",
+				"百官观望",
+				"钱粮军务积弊"
+			],
+			"origin": "天启帝驾崩、崇祯帝继位",
+			"parent_task_id": "",
+			"priority": "critical",
+			"progress": 0,
+			"required_dialogue": true,
+			"selected_solution_id": "",
+			"solution_candidates": [],
+			"status": "active",
+			"title": "新帝继位与朝局定鼎",
+			"updated_quarter": "1627-Q1"
+		}
+	],
+	"pool": [
+		{
+			"ambition": 50.0,
+			"command": 91.0,
+			"desc": "「传庭死而明亡矣」，文武双全的练兵奇才。",
+			"faction": "帝党",
+			"id": "sunchuanting",
+			"loyalty": 88.0,
+			"name": "孙传庭",
+			"persona": "你是孙传庭，文武双全，最善在陕西练出精锐秦军。你性格刚烈，痛恨空谈，主张以歼灭流寇为第一要务。",
+			"politics": 72.0,
+			"title": "候选知府",
+			"traits": [
+				"练兵能手",
+				"秦军"
+			],
+			"wisdom": 76.0
+		},
+		{
+			"ambition": 30.0,
+			"command": 92.0,
+			"desc": "文官出身却练出天雄军的忠勇之将。",
+			"faction": "帝党",
+			"id": "luxiangsheng",
+			"loyalty": 92.0,
+			"name": "卢象升",
+			"persona": "你是卢象升，文官出身却练出善战的天雄军。你忠于皇帝，性子刚烈，每战身先士卒，主张宁死不退。",
+			"politics": 45.0,
+			"title": "候补按察使",
+			"traits": [
+				"天雄军",
+				"忠勇"
+			],
+			"wisdom": 65.0
+		},
+		{
+			"ambition": 65.0,
+			"command": 55.0,
+			"desc": "提出「四正六隅、十面张网」方略的战略家。",
+			"faction": "中立",
+			"id": "yangsichang",
+			"loyalty": 65.0,
+			"name": "杨嗣昌",
+			"persona": "你是杨嗣昌，战略家，酝酿着四正六隅、十面张网的剿寇大计。你说话逻辑严密，喜欢陈述全盘方略，也精于为自己辩解。",
+			"politics": 80.0,
+			"title": "兵部主事",
+			"traits": [
+				"四正六隅",
+				"善谋划"
+			],
+			"wisdom": 85.0
+		},
+		{
+			"ambition": 15.0,
+			"command": 86.0,
+			"desc": "率白杆兵转战四方的巾帼英雄。",
+			"faction": "帝党",
+			"id": "qinliangyu",
+			"loyalty": 95.0,
+			"name": "秦良玉",
+			"persona": "你是石柱宣抚使秦良玉，率白杆兵征战的巾帼名将。你忠义刚正，说话爽利，兄弟子侄皆殉国而志不改。",
+			"politics": 60.0,
+			"title": "石柱宣抚使",
+			"traits": [
+				"白杆兵",
+				"巾帼英雄"
+			],
+			"wisdom": 70.0
+		},
+		{
+			"ambition": 90.0,
+			"command": 85.0,
+			"desc": "辽东将门之后，骁勇善战而心有大志。",
+			"faction": "中立",
+			"id": "wusangui",
+			"loyalty": 45.0,
+			"name": "吴三桂",
+			"persona": "你是辽东将门之子吴三桂，年少骁勇。你表面恭顺，实则精于权衡，最看重自己的兵马和前程。",
+			"politics": 55.0,
+			"title": "辽东少年武举",
+			"traits": [
+				"骁勇",
+				"拥兵自重"
+			],
+			"wisdom": 70.0
+		},
+		{
+			"ambition": 85.0,
+			"command": 78.0,
+			"desc": "能战而骄横，拥兵自重难以节制。",
+			"faction": "中立",
+			"id": "zuodashi",
+			"loyalty": 35.0,
+			"name": "左良玉",
+			"persona": "你是游击将军左良玉，能打仗但骄横难制。你说话桀骜，开口闭口要粮饷要兵员，把所部看作自家根本。",
+			"politics": 30.0,
+			"title": "游击将军",
+			"traits": [
+				"骄横",
+				"拥兵"
+			],
+			"wisdom": 55.0
+		},
+		{
+			"ambition": 60.0,
+			"command": 50.0,
+			"desc": "主抚派干员，曾合围流寇于车厢峡。",
+			"faction": "中立",
+			"id": "chendou",
+			"loyalty": 60.0,
+			"name": "陈奇瑜",
+			"persona": "你是陈奇瑜，奉命督剿流寇。你偏向招抚之策，说话圆滑，出事时善于推诿。",
+			"politics": 70.0,
+			"title": "右佥都御史",
+			"traits": [
+				"督剿"
+			],
+			"wisdom": 68.0
+		},
+		{
+			"ambition": 85.0,
+			"command": 75.0,
+			"desc": "雄踞福建海面的巨寇，受抚可为大明所用。",
+			"faction": "中立",
+			"id": "zhengzhilong",
+			"loyalty": 30.0,
+			"name": "郑芝龙",
+			"persona": "你是海上枭雄郑芝龙，雄踞闽海、富可敌国。你重利轻义，说话豪爽而句句谈实利，归顺朝廷不过是做生意。",
+			"politics": 65.0,
+			"title": "海上枭雄",
+			"traits": [
+				"海上霸主",
+				"重利"
+			],
+			"wisdom": 78.0
+		},
+		{
+			"ambition": 25.0,
+			"command": 40.0,
+			"desc": "刚直敢言，力主守京师、整京营。",
+			"faction": "东林",
+			"id": "libanghua",
+			"loyalty": 80.0,
+			"name": "李邦华",
+			"persona": "你是左都御史李邦华，刚直敢言。你屡屡直言京营废弛之弊，说话不留情面。",
+			"politics": 75.0,
+			"title": "右都御史",
+			"traits": [
+				"刚直"
+			],
+			"wisdom": 78.0
+		},
+		{
+			"ambition": 15.0,
+			"command": 20.0,
+			"desc": "清流领袖，书画双绝，气节凛然。",
+			"faction": "东林",
+			"id": "niyuanlu",
+			"loyalty": 85.0,
+			"name": "倪元璐",
+			"persona": "你是倪元璐，清流名士，书画双绝。你说话文雅刚正，以气节自许。",
+			"politics": 72.0,
+			"title": "国子监祭酒",
+			"traits": [
+				"清望",
+				"书法名家"
+			],
+			"wisdom": 75.0
+		},
+		{
+			"ambition": 40.0,
+			"command": 35.0,
+			"desc": "力主招抚流寇的督臣，其子为杨嗣昌。",
+			"faction": "中立",
+			"id": "yanghe",
+			"loyalty": 65.0,
+			"name": "杨鹤",
+			"persona": "你是杨鹤，督师陕西。你坚信剿不如抚，说话悲悯，总想给流民一条活路，常因招抚失策被弹劾。",
+			"politics": 68.0,
+			"title": "右佥都御史",
+			"traits": [
+				"主抚"
+			],
+			"wisdom": 65.0
+		},
+		{
+			"ambition": 65.0,
+			"command": 80.0,
+			"desc": "关宁军宿将，家丁部曲视同私产。",
+			"faction": "中立",
+			"id": "zudashou",
+			"loyalty": 50.0,
+			"name": "祖大寿",
+			"persona": "你是辽东副总兵祖大寿，关宁军宿将。你把部曲家丁看作身家性命，说话实际，为保存实力可以讨价还价。",
+			"politics": 40.0,
+			"title": "辽东副总兵",
+			"traits": [
+				"关宁军",
+				"军阀化"
+			],
+			"wisdom": 60.0
+		}
+	],
+	"provinces": [
+		{
+			"adj": [
+				"shanxi",
+				"shandong",
+				"henan"
+			],
+			"fort": 5.0,
+			"garrison": 26.0,
+			"historical_scope": "北直隶（京师直辖）",
+			"id": "jingzhi",
+			"map_name": "北直隶",
+			"morale": 40.0,
+			"name": "北直隶",
+			"owner": "ming",
+			"pop": 55.0,
+			"pos": [
+				0.7,
+				0.17
+			],
+			"tax": 14.0
+		},
+		{
+			"adj": [
+				"jingzhi",
+				"shaanxi",
+				"henan"
+			],
+			"fort": 3.0,
+			"garrison": 12.0,
+			"historical_scope": "山西布政使司",
+			"id": "shanxi",
+			"map_name": "山西",
+			"morale": 50.0,
+			"name": "山西",
+			"owner": "ming",
+			"pop": 50.0,
+			"pos": [
+				0.56,
+				0.2
+			],
+			"tax": 9.0
+		},
+		{
+			"adj": [
+				"shanxi",
+				"sichuan",
+				"henan",
+				"huguang"
+			],
+			"fort": 3.0,
+			"garrison": 20.0,
+			"historical_scope": "陕西布政使司（含甘肃、宁夏等边镇）",
+			"id": "shaanxi",
+			"map_name": "陕西",
+			"morale": 48.0,
+			"name": "陕西",
+			"owner": "ming",
+			"pop": 38.0,
+			"pos": [
+				0.34,
+				0.27
+			],
+			"tax": 12.0
+		},
+		{
+			"adj": [
+				"jingzhi",
+				"henan",
+				"nanzhili"
+			],
+			"fort": 2.0,
+			"garrison": 10.0,
+			"historical_scope": "山东布政使司",
+			"id": "shandong",
+			"map_name": "山东",
+			"morale": 52.0,
+			"name": "山东",
+			"owner": "ming",
+			"pop": 52.0,
+			"pos": [
+				0.81,
+				0.32
+			],
+			"tax": 13.0
+		},
+		{
+			"adj": [
+				"jingzhi",
+				"shanxi",
+				"shaanxi",
+				"shandong",
+				"nanzhili",
+				"huguang"
+			],
+			"fort": 2.0,
+			"garrison": 9.0,
+			"historical_scope": "河南布政使司",
+			"id": "henan",
+			"map_name": "河南",
+			"morale": 50.0,
+			"name": "河南",
+			"owner": "ming",
+			"pop": 45.0,
+			"pos": [
+				0.62,
+				0.36
+			],
+			"tax": 11.0
+		},
+		{
+			"adj": [
+				"shandong",
+				"henan",
+				"huguang",
+				"jiangxi",
+				"zhejiang"
+			],
+			"fort": 3.0,
+			"garrison": 11.0,
+			"historical_scope": "南直隶（南京直辖）",
+			"id": "nanzhili",
+			"map_name": "南直隶",
+			"morale": 55.0,
+			"name": "南直隶",
+			"owner": "ming",
+			"pop": 60.0,
+			"pos": [
+				0.77,
+				0.5
+			],
+			"tax": 20.0
+		},
+		{
+			"adj": [
+				"shaanxi",
+				"henan",
+				"sichuan",
+				"nanzhili",
+				"jiangxi",
+				"guizhou",
+				"guangxi"
+			],
+			"fort": 2.0,
+			"garrison": 9.0,
+			"historical_scope": "湖广布政使司",
+			"id": "huguang",
+			"map_name": "湖广",
+			"morale": 50.0,
+			"name": "湖广",
+			"owner": "ming",
+			"pop": 55.0,
+			"pos": [
+				0.55,
+				0.5
+			],
+			"tax": 15.0
+		},
+		{
+			"adj": [
+				"shaanxi",
+				"huguang",
+				"guizhou",
+				"yunnan"
+			],
+			"fort": 3.0,
+			"garrison": 9.0,
+			"historical_scope": "四川布政使司（含重庆府）",
+			"id": "sichuan",
+			"map_name": "四川",
+			"morale": 52.0,
+			"name": "四川",
+			"owner": "ming",
+			"pop": 50.0,
+			"pos": [
+				0.3,
+				0.48
+			],
+			"tax": 12.0
+		},
+		{
+			"adj": [
+				"sichuan",
+				"huguang",
+				"guangxi",
+				"yunnan"
+			],
+			"fort": 1.0,
+			"garrison": 5.0,
+			"historical_scope": "贵州布政使司",
+			"id": "guizhou",
+			"map_name": "贵州",
+			"morale": 45.0,
+			"name": "贵州",
+			"owner": "ming",
+			"pop": 40.0,
+			"pos": [
+				0.37,
+				0.68
+			],
+			"tax": 3.0
+		},
+		{
+			"adj": [
+				"sichuan",
+				"guizhou",
+				"guangxi"
+			],
+			"fort": 2.0,
+			"garrison": 7.0,
+			"historical_scope": "云南布政使司",
+			"id": "yunnan",
+			"map_name": "云南",
+			"morale": 48.0,
+			"name": "云南",
+			"owner": "ming",
+			"pop": 42.0,
+			"pos": [
+				0.26,
+				0.83
+			],
+			"tax": 4.0
+		},
+		{
+			"adj": [
+				"guizhou",
+				"yunnan",
+				"huguang",
+				"guangdong"
+			],
+			"fort": 1.0,
+			"garrison": 6.0,
+			"historical_scope": "广西布政使司",
+			"id": "guangxi",
+			"map_name": "广西",
+			"morale": 46.0,
+			"name": "广西",
+			"owner": "ming",
+			"pop": 42.0,
+			"pos": [
+				0.45,
+				0.81
+			],
+			"tax": 5.0
+		},
+		{
+			"adj": [
+				"guangxi",
+				"jiangxi",
+				"fujian"
+			],
+			"fort": 2.0,
+			"garrison": 8.0,
+			"historical_scope": "广东布政使司（含海南）",
+			"id": "guangdong",
+			"map_name": "广东",
+			"morale": 50.0,
+			"name": "广东",
+			"owner": "ming",
+			"pop": 55.0,
+			"pos": [
+				0.56,
+				0.9
+			],
+			"tax": 14.0
+		},
+		{
+			"adj": [
+				"huguang",
+				"nanzhili",
+				"zhejiang",
+				"fujian",
+				"guangdong"
+			],
+			"fort": 1.0,
+			"garrison": 6.0,
+			"historical_scope": "江西布政使司",
+			"id": "jiangxi",
+			"map_name": "江西",
+			"morale": 50.0,
+			"name": "江西",
+			"owner": "ming",
+			"pop": 52.0,
+			"pos": [
+				0.64,
+				0.66
+			],
+			"tax": 11.0
+		},
+		{
+			"adj": [
+				"nanzhili",
+				"jiangxi",
+				"fujian"
+			],
+			"fort": 2.0,
+			"garrison": 7.0,
+			"historical_scope": "浙江布政使司",
+			"id": "zhejiang",
+			"map_name": "浙江",
+			"morale": 52.0,
+			"name": "浙江",
+			"owner": "ming",
+			"pop": 60.0,
+			"pos": [
+				0.81,
+				0.64
+			],
+			"tax": 16.0
+		},
+		{
+			"adj": [
+				"zhejiang",
+				"jiangxi",
+				"guangdong"
+			],
+			"fort": 2.0,
+			"garrison": 6.0,
+			"historical_scope": "福建布政使司",
+			"id": "fujian",
+			"map_name": "福建",
+			"morale": 50.0,
+			"name": "福建",
+			"owner": "ming",
+			"pop": 52.0,
+			"pos": [
+				0.86,
+				0.79
+			],
+			"tax": 12.0
+		}
+	],
+	"quarter": 1,
+	"quarter_day": 1,
+	"quarter_edicts": [],
+	"quarter_reports": [],
+	"quarter_summaries": [],
+	"quarter_task_snapshot": [
+		{
+			"completion_reason": "",
+			"continuation": "需经大臣召对或朝会，形成可执行方案。",
+			"continuation_reason": "开局根任务",
+			"created_quarter": "1627-Q1",
+			"description": "天启帝驾崩，崇祯帝初即大位。魏忠贤及阉党余势未清，百官观望，需先稳定朝局并确立新政方向。",
+			"evidence_refs": [],
+			"id": "succession_crisis",
+			"obstacles": [
+				"阉党余势",
+				"百官观望",
+				"钱粮军务积弊"
+			],
+			"origin": "天启帝驾崩、崇祯帝继位",
+			"parent_task_id": "",
+			"priority": "critical",
+			"progress": 0,
+			"required_dialogue": true,
+			"selected_solution_id": "",
+			"solution_candidates": [],
+			"status": "active",
+			"title": "新帝继位与朝局定鼎",
+			"updated_quarter": "1627-Q1"
+		}
+	],
+	"rebel_power": 20.0,
+	"stage": "morning_court",
+	"tax_cut_months": 0,
+	"treasury": 120.0,
+	"version": 5,
+	"victory": false,
+	"year": 1627
+}
