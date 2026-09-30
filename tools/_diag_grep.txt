@@ -1,0 +1,40 @@
+33:var world_regions: Array = []
+59:func _ready() -> void:
+68:func _load_assets() -> void:
+90:	var world_file := FileAccess.open("res://data/world_regions.json", FileAccess.READ)
+94:			world_regions = world_data
+114:func sync_uniforms() -> void:
+151:func _id_color_of(pid: String) -> Color:
+159:func _cam_top() -> Vector2:
+162:func to_screen(mp: Vector2) -> Vector2:
+165:func to_map(sp: Vector2) -> Vector2:
+168:func clamp_cam() -> void:
+173:func zoom_at(factor: float, anchor_screen: Vector2) -> void:
+181:func zoom_step(factor: float) -> void:
+184:func reset_cam() -> void:
+190:func _province_at(screen_pos: Vector2) -> String:
+205:func _world_at(mp: Vector2) -> String:
+207:	for region in world_regions:
+217:			if polygon.size() >= 3 and Geometry2D.is_point_in_polygon(normalized, polygon):
+221:func _world_color(region: Dictionary) -> Color:
+225:func _world_polygon(ring: Array) -> PackedVector2Array:
+236:func _world_polygon_is_drawable(polygon: PackedVector2Array) -> bool:
+239:	var triangles := Geometry2D.triangulate_polygon(polygon)
+242:func _draw_world_regions() -> void:
+243:	for region in world_regions:
+256:					draw_colored_polygon(polygon, Color(color, 0.48))
+260:func _draw() -> void:
+266:	_draw_world_regions()
+277:func _id_matches_point(screen_point: Vector2, pid: String) -> bool:
+292:func _label_fits(center: Vector2, text_size: Vector2, pid: String, angle: float) -> bool:
+301:func _draw_label(center: Vector2, text: String, font_size: int, angle: float) -> void:
+310:func _draw_gansu_label(center: Vector2, font_size: int, angle: float) -> void:
+324:func _draw_province_labels() -> void:
+356:func _decor_point(value) -> Vector2:
+362:func _world_label_center(region: Dictionary) -> Vector2:
+380:func _draw_world_labels() -> void:
+383:	for region in world_regions:
+398:func _draw_decor_labels() -> void:
+414:func _draw_dynamic_labels() -> void:
+436:func _refresh_hover() -> void:
+443:func _gui_input(event: InputEvent) -> void:

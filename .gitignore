@@ -1,0 +1,41 @@
+# ---------- Node / 新前端 ----------
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# ---------- Rust / Tauri ----------
+app/src-tauri/target/
+target/
+
+# ---------- .NET 工具构建产物 ----------
+tools/**/bin/
+tools/**/obj/
+[Bb]in/
+[Oo]bj/
+
+# ---------- Godot 旧原型（阶段7 后整体归档，不纳入新构建） ----------
+.godot/
+*.import
+legacy-godot/
+legacy/
+
+# ---------- Python 开发辅助 ----------
+__pycache__/
+*.pyc
+
+# ---------- 临时/日志/截图产物 ----------
+*.log
+*.tmp
+shot_*.png
+v_*.png
+dbg_*.png
+vision_*.png
+temp_*.png
+
+# ---------- 编辑器 / 系统 ----------
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini

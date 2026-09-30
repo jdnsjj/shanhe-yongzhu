@@ -1,0 +1,12 @@
+OK  assets/icons/ui_panel.png
+{
+  "ok": true,
+  "results": [
+    {
+      "file": "assets/icons/ui_panel.png",
+      "prompt": "横向长条形游戏面板底板，中国古代宫廷风格，深红朱漆大漆底，鎏金细边框，两端云头纹装饰，中央区域平整深色供内容叠加，高清细节，画面中不要出现任何文字. Style: UI element asset, flat modern design, consistent style, isolated on solid background, clean edges, no watermark, no text",
+      "size": "1024x512",
+      "model": "gpt-image-2"
+    }
+  ]
+}

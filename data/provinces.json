@@ -1,0 +1,17 @@
+[
+  {"id":"jingzhi","name":"北直隶","map_name":"北直隶","historical_scope":"北直隶（京师直辖）","owner":"ming","tax":14,"garrison":26,"pop":55,"morale":40,"fort":5,"pos":[0.70,0.17],"adj":["shanxi","shandong","henan"]},
+  {"id":"shanxi","name":"山西","map_name":"山西","historical_scope":"山西布政使司","owner":"ming","tax":9,"garrison":12,"pop":50,"morale":50,"fort":3,"pos":[0.56,0.20],"adj":["jingzhi","shaanxi","henan"]},
+  {"id":"shaanxi","name":"陕西","map_name":"陕西","historical_scope":"陕西布政使司（含甘肃、宁夏等边镇）","owner":"ming","tax":12,"garrison":20,"pop":38,"morale":48,"fort":3,"pos":[0.34,0.27],"adj":["shanxi","sichuan","henan","huguang"]},
+  {"id":"shandong","name":"山东","map_name":"山东","historical_scope":"山东布政使司","owner":"ming","tax":13,"garrison":10,"pop":52,"morale":52,"fort":2,"pos":[0.81,0.32],"adj":["jingzhi","henan","nanzhili"]},
+  {"id":"henan","name":"河南","map_name":"河南","historical_scope":"河南布政使司","owner":"ming","tax":11,"garrison":9,"pop":45,"morale":50,"fort":2,"pos":[0.62,0.36],"adj":["jingzhi","shanxi","shaanxi","shandong","nanzhili","huguang"]},
+  {"id":"nanzhili","name":"南直隶","map_name":"南直隶","historical_scope":"南直隶（南京直辖）","owner":"ming","tax":20,"garrison":11,"pop":60,"morale":55,"fort":3,"pos":[0.77,0.50],"adj":["shandong","henan","huguang","jiangxi","zhejiang"]},
+  {"id":"huguang","name":"湖广","map_name":"湖广","historical_scope":"湖广布政使司","owner":"ming","tax":15,"garrison":9,"pop":55,"morale":50,"fort":2,"pos":[0.55,0.50],"adj":["shaanxi","henan","sichuan","nanzhili","jiangxi","guizhou","guangxi"]},
+  {"id":"sichuan","name":"四川","map_name":"四川","historical_scope":"四川布政使司（含重庆府）","owner":"ming","tax":12,"garrison":9,"pop":50,"morale":52,"fort":3,"pos":[0.30,0.48],"adj":["shaanxi","huguang","guizhou","yunnan"]},
+  {"id":"guizhou","name":"贵州","map_name":"贵州","historical_scope":"贵州布政使司","owner":"ming","tax":3,"garrison":5,"pop":40,"morale":45,"fort":1,"pos":[0.37,0.68],"adj":["sichuan","huguang","guangxi","yunnan"]},
+  {"id":"yunnan","name":"云南","map_name":"云南","historical_scope":"云南布政使司","owner":"ming","tax":4,"garrison":7,"pop":42,"morale":48,"fort":2,"pos":[0.26,0.83],"adj":["sichuan","guizhou","guangxi"]},
+  {"id":"guangxi","name":"广西","map_name":"广西","historical_scope":"广西布政使司","owner":"ming","tax":5,"garrison":6,"pop":42,"morale":46,"fort":1,"pos":[0.45,0.81],"adj":["guizhou","yunnan","huguang","guangdong"]},
+  {"id":"guangdong","name":"广东","map_name":"广东","historical_scope":"广东布政使司（含海南）","owner":"ming","tax":14,"garrison":8,"pop":55,"morale":50,"fort":2,"pos":[0.56,0.90],"adj":["guangxi","jiangxi","fujian"]},
+  {"id":"jiangxi","name":"江西","map_name":"江西","historical_scope":"江西布政使司","owner":"ming","tax":11,"garrison":6,"pop":52,"morale":50,"fort":1,"pos":[0.64,0.66],"adj":["huguang","nanzhili","zhejiang","fujian","guangdong"]},
+  {"id":"zhejiang","name":"浙江","map_name":"浙江","historical_scope":"浙江布政使司","owner":"ming","tax":16,"garrison":7,"pop":60,"morale":52,"fort":2,"pos":[0.81,0.64],"adj":["nanzhili","jiangxi","fujian"]},
+  {"id":"fujian","name":"福建","map_name":"福建","historical_scope":"福建布政使司","owner":"ming","tax":12,"garrison":6,"pop":52,"morale":50,"fort":2,"pos":[0.86,0.79],"adj":["zhejiang","jiangxi","guangdong"]}
+]

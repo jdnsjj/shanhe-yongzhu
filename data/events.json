@@ -1,0 +1,143 @@
+[
+  {
+    "id":"eunuch_power",
+    "title":"阉党擅权",
+    "text":"登基月余，你渐渐察觉奏章批红多出自司礼监魏忠贤之手，朝堂上下遍布阉党羽翼，连边镇总兵也多出其门。东林诸臣日夜上疏，泣请圣断。九千岁之势，已尾大不掉。",
+    "once":true, "chance":1.0, "min_year":1627,
+    "choices":[
+      {"label":"雷霆手段，铲除阉党","effects":{"remove_minister":"weizhongxian","treasury":120,"court_stability":-15,"all_pop":5},"result":"魏忠贤黜逐凤阳，途中自缢。抄没家资白银百余万两输入内帑。阉党震恐，朝堂为之一空，然庶务一时乏人。"},
+      {"label":"暂且隐忍，徐徐图之","effects":{"court_stability":-5},"result":"你按捺不动，暗中握紧了厂卫。魏忠贤愈发骄横，朝野侧目，人心惶惶。"}
+    ]
+  },
+  {
+    "id":"shaanxi_famine",
+    "title":"陕西大旱",
+    "text":"陕西连岁不雨，赤地千里，草根树皮皆尽，道殣相望。饥民相聚为盗，澄城知县张斗耀竟被乱民所杀。",
+    "once":false, "chance":0.45, "min_year":1628, "prov_select":"fixed:shaanxi",
+    "choices":[
+      {"label":"开仓赈济","effects":{"treasury":-50,"prov_pop":15,"rebel_power":-4},"result":"你急调漕粮赈济陕西，饥民暂得喘息，啸聚者渐散。（陕西民心+15）"},
+      {"label":"国库空虚，听之任之","effects":{"prov_pop":-18,"rebel_power":12},"result":"饥民无食，从贼者日众。陕西遍地烽烟，流寇自此坐大。（陕西民心-18）"}
+    ]
+  },
+  {
+    "id":"pay_arrears",
+    "title":"九边欠饷",
+    "text":"兵部急奏：边镇欠饷已积数月，军心最馁之镇已卖甲鬻刀，恐生哗变。",
+    "once":false, "chance":0.35, "min_year":1627, "prov_select":"low_morale_border",
+    "choices":[
+      {"label":"变卖内帑，补发欠饷","effects":{"treasury":-45,"prov_morale":12},"result":"你发内帑补饷，边军欢声雷动，士气大振。（$prov军心+12）"},
+      {"label":"令其忍耐","effects":{"prov_morale":-15,"prov_garrison_pct":-0.08},"result":"军中怨声载道，哗变逃亡者众。（$prov军心-15，兵力-8%）"}
+    ]
+  },
+  {
+    "id":"liao_pay",
+    "title":"辽饷之议",
+    "text":"户部奏请仿旧例加征辽饷，每亩加派银二厘，可得银百五十万两。然小民困于连年加派，恐剜肉补疮。",
+    "once":false, "chance":0.25, "min_year":1628,
+    "choices":[
+      {"label":"准奏加派","effects":{"treasury":100,"all_pop":-8,"rebel_power":5},"result":"辽饷加派下来，府县催科如火，民间卖儿鬻女者有之，怨声载道。（各省民心-8）"},
+      {"label":"驳回，再议他策","effects":{"all_morale":-4},"result":"你拒绝加派。辽东军需依旧拮据，前线将领颇有怨言。（各省军心-4）"}
+    ]
+  },
+  {
+    "id":"jin_invade",
+    "title":"后金入塞",
+    "text":"八百里加急！皇太极亲率八旗大军避开宁锦防线，破墙子岭、青山口而入，兵锋直指京师！京师戒严，人心汹汹。",
+    "once":false, "chance":0.3, "min_year":1629, "special":"jin_invade",
+    "choices":[
+      {"label":"严令诸军入卫，坚壁死守","effects":{"defend_bonus":1.25},"result":"勤王之师星夜入卫，你登城督战，将士用命。"},
+      {"label":"令督师率关宁铁骑出城浪战","effects":{"defend_bonus":0.9},"result":"关宁铁骑出城逆战，胜负难料！"}
+    ]
+  },
+  {
+    "id":"yuan_case",
+    "title":"袁崇焕之议",
+    "text":"市井流言四起：督师袁崇焕通敌纵敌、矫诏杀毛文龙。朝中攻讦者众，辽东军心亦因此惶惶。",
+    "once":true, "chance":1.0, "min_year":1629, "condition":"minister_alive:yuanchonghuan",
+    "choices":[
+      {"label":"下狱论死","effects":{"remove_minister":"yuanchonghuan","all_morale":-12,"court_stability":-5},"result":"袁崇焕磔于西市。辽东将士闻之寒心，自此边将人人自危。（各省军心-12）"},
+      {"label":"戴罪守辽，以观后效","effects":{"all_morale":3},"result":"你力排众议，令袁崇焕戴罪守辽。袁崇焕泣血誓师，士卒感奋。（各省军心+3）"},
+      {"label":"深信不疑，加意抚慰","effects":{"loyalty_boost":{"yuanchonghuan":15}},"result":"你烧毁攻讦奏章，反加抚慰。袁崇焕感泣，誓以死报。"}
+    ]
+  },
+  {
+    "id":"faction_strife",
+    "title":"朝堂党争",
+    "text":"温体仁疏攻钱谦益结党营私，东林诸臣伏地泣辩。两派在朝堂上吵作一团，庶务几废。",
+    "once":false, "chance":0.3, "min_year":1628,
+    "choices":[
+      {"label":"支持温体仁，抑东林","effects":{"court_stability":-5,"loyalty_boost":{"wentiren":10,"qianqianyi":-15}},"result":"钱谦益罢归。温体仁炙手可热，东林衔恨。"},
+      {"label":"各打五十大板","effects":{"court_stability":3},"result":"你各予申饬，双方暂敛。朝堂稍安，然积怨更深。"}
+    ]
+  },
+  {
+    "id":"qinliangyu_plea",
+    "title":"石柱请缨",
+    "text":"石柱宣抚使秦良玉率白杆兵数千，自备粮秣北上勤王，上疏请缨杀贼。巾帼之忠，满朝动容。",
+    "once":true, "chance":1.0, "min_year":1628,
+    "choices":[
+      {"label":"嘉奖录用","effects":{"add_minister":"qinliangyu","all_morale":5},"result":"你亲书「忠义可嘉」赐之。秦良玉率白杆兵入卫，军心大振。（各省军心+5）"},
+      {"label":"婉言谢绝","effects":{},"result":"你以道路遥远为由婉拒。秦良玉率部返蜀，闻者叹惋。"}
+    ]
+  },
+  {
+    "id":"zhengzhilong_ally",
+    "title":"海上招抚",
+    "text":"闽海巨寇郑芝龙势大，官军莫制。福建巡抚奏请招抚，许以官爵，可得其战船千艘、岁入百万。",
+    "once":true, "chance":1.0, "min_year":1628,
+    "choices":[
+      {"label":"许以海防游击，招抚之","effects":{"add_minister":"zhengzhilong","treasury":150},"result":"郑芝龙受抚，献银百五十万两。闽海肃然，泉漳商税大增。"},
+      {"label":"寇终为寇，严令进剿","effects":{"treasury":-30},"result":"进剿师老无功，海上商路断绝，闽省财政愈困。"}
+    ]
+  },
+  {
+    "id":"nongzheng_book",
+    "title":"农政全书",
+    "text":"徐光启所撰《农政全书》告成，凡六十卷，屯垦水利无所不包。臣请刊行天下，劝课农桑。",
+    "once":true, "chance":1.0, "min_year":1628, "condition":"minister_alive:xuguangqi",
+    "choices":[
+      {"label":"颁行天下","effects":{"all_pop":6,"court_stability":2},"result":"《农政全书》颁行州县，垦荒水利渐兴，民以为便。（各省民心+6）"},
+      {"label":"留中不发","effects":{},"result":"你将书稿留中。徐光启喟然长叹。"}
+    ]
+  },
+  {
+    "id":"plague",
+    "title":"大疫流行",
+    "text":"疫气流行，朝发夕死。城内棺木售尽，十室九空，守城军士亦大半病倒。",
+    "once":false, "chance":0.2, "min_year":1633, "prov_select":"random_ming",
+    "choices":[
+      {"label":"设医施药","effects":{"treasury":-35,"prov_pop":8},"result":"你命太医院设局施药，疫情渐缓，民感其德。（$prov民心+8）"},
+      {"label":"无可奈何，闭门自守","effects":{"prov_pop":-15,"prov_garrison_pct":-0.03},"result":"疫情蔓延数月，死者枕藉，兵额大减。（$prov民心-15）"}
+    ]
+  },
+  {
+    "id":"licheng_rise",
+    "title":"闯将李自成",
+    "text":"驿卒出身之李自成，于米脂聚众起事，号闯将，骁悍善战，饥民从者如流。",
+    "once":true, "chance":1.0, "min_year":1630,
+    "choices":[
+      {"label":"悬赏缉拿","effects":{"rebel_power":10},"result":"李自成势不可挡，官军屡败，其名日炽。"},
+      {"label":"严令进剿","effects":{"rebel_power":6,"treasury":-20},"result":"官军进剿，互有胜负，然流寇愈剿愈多。"}
+    ]
+  },
+  {
+    "id":"zhangxianzhong",
+    "title":"八大王张献忠",
+    "text":"张献忠据米脂十八寨应自成，号八大王，转战秦晋，官军莫能制。",
+    "once":true, "chance":1.0, "min_year":1630,
+    "choices":[
+      {"label":"严密防剿","effects":{"rebel_power":8},"result":"张献忠飘忽如风，官军疲于奔命。"},
+      {"label":"先抚后图","effects":{"rebel_power":3,"treasury":-15},"result":"张献忠受抚复叛，朝议哗然。"}
+    ]
+  },
+  {
+    "id":"mutiny_risk",
+    "title":"哗变之兆",
+    "text":"某镇军士因欠饷鼓噪，焚辕门，缚官吏。各镇纷纷效仿之势已成。",
+    "once":false, "chance":0.25, "min_year":1629, "condition":"morale_low", "prov_select":"low_morale_border",
+    "choices":[
+      {"label":"发帑金抚定","effects":{"treasury":-40,"prov_morale":8},"result":"帑金一发，哗变暂息。（$prov军心+8）"},
+      {"label":"严惩首恶","effects":{"prov_morale":-10,"prov_garrison_pct":-0.05},"result":"杀数十人镇之，然军心离叛，逃亡者不可胜数。（$prov军心-10）"}
+    ]
+  }
+]

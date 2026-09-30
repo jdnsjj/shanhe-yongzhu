@@ -1,0 +1,9 @@
+{
+  "base_url": "https://open.bigmodel.cn/api/paas/v4",
+  "api_key": "",
+  "model": "glm-4-flash",
+  "prompt_cache_ttl_seconds": 45,
+  "prompt_cache_max_entries": 64,
+  "enable_prompt_cache": false,
+  "prompt_cache_key": ""
+}
