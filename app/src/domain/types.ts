@@ -74,9 +74,9 @@ export interface PoliticalTask {
   nextObjective?: string
 }
 
-/** 玩家已采纳的政务方案。 */
+/** 玩家已采纳的政务方案。id 可在采纳时由系统生成，故为可选。 */
 export interface Solution {
-  id: string
+  id?: string
   taskId?: string
   quarter?: string
   title?: string
