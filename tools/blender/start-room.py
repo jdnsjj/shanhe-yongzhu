@@ -458,7 +458,40 @@ if get_font() is not None:
 else:
     print("no CJK font, skipping map labels")
 
-# ---- desk props ----
+# ---- desk micro-details ----
+# Small, readable marks of hand-built joinery and daily use; kept below the
+# existing hero silhouettes so the light balance and composition stay intact.
+for i in range(4):
+    x = -1.68 + i * 1.12
+    disc("drawer_escutcheon_%d" % i, (x, -0.598, 0.47), (0.028, 0.028), BRASS, rot=(math.pi / 2, 0, 0))
+    cyl("drawer_keyhole_%d" % i, (x, -0.604, 0.438), 0.011, 0.010, BRASS, rot=(math.pi / 2, 0, 0), verts=12)
+
+# brass pins at the four corners of the map's raised wooden bed
+for mi, mx in enumerate((-1.96, 1.96)):
+    for mj, my in enumerate((MAP_CY - 1.02, MAP_CY + 1.02)):
+        disc("map_bed_pin_%d_%d" % (mi, mj), (mx, my, 0.931), (0.032, 0.032), BRASS)
+
+# a shallow celadon brush washer, with a dark water pool and a raised rim
+# tucked beside the inkstone (a close-up reward without competing with the map)
+disc("brush_washer", (-2.92, 1.12, 0.900), (0.20, 0.15), CELADON)
+disc("brush_washer_pool", (-2.92, 1.12, 0.906), (0.145, 0.105), INKSTONE)
+bpy.ops.mesh.primitive_torus_add(major_radius=0.155, minor_radius=0.014, major_segments=28, minor_segments=10, location=(-2.92, 1.12, 0.914))
+washer_rim = bpy.context.object
+washer_rim.name = "brush_washer_rim"
+washer_rim.data.materials.append(CELADON)
+
+# tied silk cords on the hanging scroll rack; the knots give the repeated rolls
+# a small handmade asymmetry instead of reading as bare cylinders.
+for ri, rz in enumerate((0.68, 1.02, 1.36)):
+    cyl("rack_scroll_tie_%d" % ri, (3.35, 1.25, rz), 0.058, 0.022, SEAL_CLAY,
+        rot=(math.pi / 2, 0, 0), verts=16)
+    disc("rack_scroll_tassel_%d" % ri, (3.35, 1.25, rz - 0.045), (0.022, 0.030), SEAL_CLAY)
+
+# stacked book page cuts: three fine lines catch the warm key light and sell the
+# page block without changing the book silhouette.
+for pi, py in enumerate((1.52, 1.56, 1.60)):
+    box("book_page_cut_%d" % pi, (2.05, py, 1.087), (0.48, 0.006, 0.0015), STAIN, rot=(0, 0, 0.02), bev=0)
+
 # stacked volumes: hard covers, cloth wrap, and a cut page block
 box("book_a", (2.05, 1.55, 0.925), (0.70, 0.50, 0.055), LACQUER, rot=(0, 0, 0.06), bev=0.006, uv=1)
 box("book_a_pages", (2.05, 1.55, 0.957), (0.655, 0.455, 0.035), PAPER, rot=(0, 0, 0.06), bev=0.002)
