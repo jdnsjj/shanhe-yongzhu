@@ -475,9 +475,9 @@ for mi, mx in enumerate((-1.96, 1.96)):
 
 # a shallow celadon brush washer, with a dark water pool and a raised rim
 # tucked beside the inkstone (a close-up reward without competing with the map)
-disc("brush_washer", (-3.02, 0.62, 0.900), (0.20, 0.15), CELADON)
-disc("brush_washer_pool", (-3.02, 0.62, 0.906), (0.145, 0.105), INKSTONE)
-bpy.ops.mesh.primitive_torus_add(major_radius=0.155, minor_radius=0.014, major_segments=28, minor_segments=10, location=(-3.02, 0.62, 0.914))
+disc("brush_washer", (-2.38, 0.82, 0.868), (0.20, 0.15), CELADON)
+disc("brush_washer_pool", (-2.38, 0.82, 0.874), (0.145, 0.105), INKSTONE)
+bpy.ops.mesh.primitive_torus_add(major_radius=0.155, minor_radius=0.014, major_segments=28, minor_segments=10, location=(-2.38, 0.82, 0.882))
 washer_rim = bpy.context.object
 washer_rim.name = "brush_washer_rim"
 washer_rim.data.materials.append(CELADON)
@@ -513,31 +513,31 @@ box("wood_box_corner_a", (3.19, 0.03, 1.08), (0.10, 0.10, 0.06), BRASS, rot=(0, 
 box("wood_box_corner_b", (2.45, 0.53, 1.08), (0.10, 0.10, 0.06), BRASS, rot=(0, 0, -0.09), bev=0)
 
 # brush rest + brushes laid across it, tips tapered
-box("brush_rest", (-2.65, 1.35, 0.93), (0.52, 0.16, 0.09), WOOD_FRAME, bev=0.01, uv=1)
+box("brush_rest", (-2.55, 1.45, 0.915), (0.52, 0.16, 0.09), WOOD_FRAME, bev=0.01, uv=1)
 for i in range(4):
-    bx = -2.80 + i * 0.10
-    by = 1.35 + (i % 2) * 0.03
+    bx = -2.70 + i * 0.10
+    by = 1.45 + (i % 2) * 0.03
     rot_z = 0.12 * (i - 1.5)
     cyl("brush_%d" % i, (bx, by, 1.12), 0.020, 0.40, WOOD_LIGHT, rot=(0.10, rot_z, 0), verts=14)
     cyl("brush_ferrule_%d" % i, (bx - math.sin(rot_z) * 0.20, by + math.cos(rot_z) * 0.20 + 0.018, 1.115), 0.021, 0.030, BRASS, rot=(0.10, rot_z, 0), verts=14)
     cyl("brush_tuft_%d" % i, (bx - math.sin(rot_z) * 0.245, by + math.cos(rot_z) * 0.245 + 0.036, 1.112), 0.016, 0.075, BRUSH_HAIR, rot=(0.12, rot_z, 0), verts=12)
 
 # inkstone with a wet pool, plus a resting ink stick
-box("inkstone", (-2.35, 0.12, 0.895), (0.60, 0.44, 0.065), INKSTONE, rot=(0, 0, 0.12), bev=0.014, uv=1)
-box("ink_pool", (-2.35, 0.12, 0.933), (0.38, 0.26, 0.008), mat_basic("ink_pool", (0.010, 0.012, 0.014), rough=0.14), rot=(0, 0, 0.12), bev=0)
-box("ink_stick", (-2.15, -0.07, 0.935), (0.20, 0.055, 0.028), INK, rot=(0, 0, 0.30), bev=0.004)
+box("inkstone", (-2.10, 0.18, 0.895), (0.60, 0.44, 0.065), INKSTONE, rot=(0, 0, 0.12), bev=0.014, uv=1)
+box("ink_pool", (-2.10, 0.18, 0.933), (0.38, 0.26, 0.008), mat_basic("ink_pool", (0.010, 0.012, 0.014), rough=0.14), rot=(0, 0, 0.12), bev=0)
+box("ink_stick", (-1.90, -0.01, 0.935), (0.20, 0.055, 0.028), INK, rot=(0, 0, 0.30), bev=0.004)
 
 # seals: carved shou-shan stone and a jade one, with the vermilion pad
-cyl("seal_red", (2.18, -0.30, 0.925), 0.075, 0.16, LACQUER, rot=(0.06, 0, 0), verts=24)
-box("seal_red_cap", (2.18, -0.30, 1.005), (0.15, 0.13, 0.03), LACQUER, rot=(0.06, 0, 0.20), bev=0.005)
-cyl("seal_jade", (2.43, -0.42, 0.910), 0.060, 0.13, JADE, rot=(-0.05, 0.10, 0), verts=24)
-cyl("seal_pad", (2.30, -0.02, 0.895), 0.13, 0.05, SEAL_CLAY, verts=24)
-cyl("seal_pad_rim", (2.30, -0.02, 0.902), 0.135, 0.02, BRASS, verts=28)
+cyl("seal_red", (2.05, -0.30, 0.956), 0.075, 0.16, LACQUER, rot=(0.06, 0, 0), verts=24)
+box("seal_red_cap", (2.05, -0.30, 1.036), (0.15, 0.13, 0.03), LACQUER, rot=(0.06, 0, 0.20), bev=0.005)
+cyl("seal_jade", (2.35, -0.40, 0.941), 0.060, 0.13, JADE, rot=(-0.05, 0.10, 0), verts=24)
+cyl("seal_pad", (2.15, -0.02, 0.901), 0.13, 0.05, SEAL_CLAY, verts=24)
+cyl("seal_pad_rim", (2.15, -0.02, 0.908), 0.135, 0.02, BRASS, verts=28)
 
 # paperweight and a rolled edict
 box("weight_stone", (-0.62, -0.28, 0.905), (0.34, 0.14, 0.06), INKSTONE, rot=(0, 0, -0.05), bev=0.012)
-cyl("edict_roll", (-0.98, -0.44, 0.905), 0.045, 0.72, PAPER, rot=(0, -0.22, math.pi / 2), verts=20)
-cyl("edict_tie", (-0.98, -0.44, 0.905), 0.048, 0.03, LACQUER, rot=(0, -0.22, math.pi / 2), verts=20)
+cyl("edict_roll", (-1.30, -0.42, 0.92), 0.045, 0.72, PAPER, rot=(0, math.pi / 2, 0), verts=20)
+cyl("edict_tie", (-1.30, -0.42, 0.92), 0.048, 0.03, LACQUER, rot=(0, math.pi / 2, 0), verts=20)
 
 # ---- right scroll rack: capped top and base, scrolls on each shelf ----
 box("rack_upright_a", (3.35, 1.95, 1.00), (0.13, 0.13, 1.30), WOOD_FRAME, bev=0.012, uv=1)
@@ -628,26 +628,26 @@ cyl("smoke_1", (-4.87, 2.31, 1.14), 0.032, 0.14, CLOTH, verts=10)
 cyl("smoke_2", (-4.83, 2.29, 1.26), 0.046, 0.14, CLOTH, verts=10)
 
 # ---- detail props (v2) ----
-bpy.ops.mesh.primitive_torus_add(major_radius=0.085, minor_radius=0.016, location=(0.62, -0.42, 0.922), rotation=(math.pi / 2, 0, 0))
+bpy.ops.mesh.primitive_torus_add(major_radius=0.085, minor_radius=0.016, location=(2.55, -0.25, 0.922))
 bowl_rim = bpy.context.object
 bowl_rim.name = "tea_bowl_rim"
 bowl_rim.data.materials.append(CELADON)
-cyl("tea_bowl", (0.62, -0.42, 0.888), 0.080, 0.055, CELADON, verts=32)
-disc("tea_saucer", (0.62, -0.42, 0.871), (0.115, 0.115), WOOD_FRAME)
-box("ink_stick_2", (-2.16, 0.24, 0.949), (0.15, 0.045, 0.016), INK, rot=(0, 0, 0.5), bev=0.004)
+cyl("tea_bowl", (2.55, -0.25, 0.888), 0.080, 0.055, CELADON, verts=32)
+disc("tea_saucer", (2.55, -0.25, 0.871), (0.115, 0.115), WOOD_FRAME)
+box("ink_stick_2", (-1.96, 0.38, 0.949), (0.15, 0.045, 0.016), INK, rot=(0, 0, 0.5), bev=0.004)
 # water dropper beside the inkstone, and a carved inscription on the inkstick
-cyl("dropper_body", (-1.98, -0.16, 0.905), 0.032, 0.07, CELADON, verts=20)
-cyl("dropper_spout", (-1.93, -0.16, 0.918), 0.010, 0.06, CELADON, rot=(0, 0, math.pi / 2 - 0.5), verts=10)
+cyl("dropper_body", (-1.78, 0.14, 0.905), 0.032, 0.07, CELADON, verts=20)
+cyl("dropper_spout", (-1.73, 0.14, 0.918), 0.010, 0.06, CELADON, rot=(0, 0, math.pi / 2 - 0.5), verts=10)
 if get_font() is not None:
-    relief("inkstick_char", "墨", (-2.16, 0.24, 0.958), 0.030, INK, rot=(0, 0, 0.5), extrude=0.0008)
-box("brass_tray", (1.42, -0.18, 0.870), (0.62, 0.50, 0.012), BRASS, bev=0.006)
+    relief("inkstick_char", "墨", (-1.96, 0.38, 0.958), 0.030, INK, rot=(0, 0, 0.5), extrude=0.0008)
+box("brass_tray", (2.05, -0.18, 0.870), (0.62, 0.50, 0.012), BRASS, bev=0.006)
 # carved characters on the seal's top face, and a fresh vermilion impression on the pad
 if get_font() is not None:
-    relief("seal_char_a", "永", (1.30, -0.30, 1.021), 0.048, INK, rot=(0, 0, 0), extrude=0.0012)
-    relief("seal_char_b", "驻", (1.30, -0.315, 1.021), 0.048, INK, rot=(0, 0, 0), extrude=0.0012)
-    relief("seal_print", "永", (1.42, -0.02, 0.923), 0.050, SEAL_CLAY, rot=(0, 0, 0.30), extrude=0.0010)
+    relief("seal_char_a", "永", (2.05, -0.30, 1.052), 0.048, INK, rot=(0, 0, 0), extrude=0.0012)
+    relief("seal_char_b", "驻", (2.05, -0.315, 1.052), 0.048, INK, rot=(0, 0, 0), extrude=0.0012)
+    relief("seal_print", "永", (2.15, -0.02, 0.932), 0.050, SEAL_CLAY, rot=(0, 0, 0.30), extrude=0.0010)
 for i in range(5):
-    box("slip_%d" % i, (-1.15 + i * 0.012, -0.52 + i * 0.014, 0.870 + i * 0.004), (0.34 - i * 0.012, 0.22 - i * 0.010, 0.004), PAPER, rot=(0, 0, 0.04 * i - 0.05), bev=0)
+    box("slip_%d" % i, (-2.15 + i * 0.012, -0.12 + i * 0.014, 0.870 + i * 0.004), (0.34 - i * 0.012, 0.22 - i * 0.010, 0.004), PAPER, rot=(0, 0, 0.04 * i - 0.05), bev=0)
 box("lamp_base", (2.42, -0.72, 0.876), (0.16, 0.16, 0.022), BRASS, bev=0.006)
 cyl("lamp_stem", (2.42, -0.72, 0.97), 0.014, 0.14, BRASS, verts=14)
 cyl("lamp_cup", (2.42, -0.72, 1.055), 0.055, 0.045, BRASS, verts=20)
@@ -670,15 +670,15 @@ except Exception as _e:
 box("lamp_shade_rib_a", (2.42, -0.72, 1.075), (0.128, 0.006, 0.10), WOOD_FRAME, bev=0)
 box("lamp_shade_rib_b", (2.42, -0.72, 1.075), (0.006, 0.128, 0.10), WOOD_FRAME, bev=0)
 # a second, shorter candle on the tray
-cyl("candle2_body", (2.08, -0.30, 0.905), 0.026, 0.16, PAPER, verts=16)
-cyl("candle2_flame", (2.08, -0.30, 1.005), 0.012, 0.03, GLOW, verts=10)
+cyl("candle2_body", (2.25, -0.25, 0.956), 0.026, 0.16, PAPER, verts=16)
+cyl("candle2_flame", (2.25, -0.25, 1.056), 0.012, 0.03, GLOW, verts=10)
 pl2 = bpy.data.lights.new("candle2_pt", type="POINT")
 pl2.energy = 6.0
 pl2.color = (1.0, 0.60, 0.32)
 pl2.shadow_soft_size = 0.05
 o2 = bpy.data.objects.new("candle2_pt", pl2)
 scene.collection.objects.link(o2)
-o2.location = (2.08, -0.30, 1.02)
+o2.location = (2.25, -0.25, 1.07)
 # hanging lanterns on the back wall for depth
 for li, lx in enumerate((-2.20, 2.60)):
     cyl("lantern_cord_%d" % li, (lx, 4.30, 3.05), 0.004, 0.60, CLOTH, verts=8)
