@@ -459,6 +459,8 @@ else:
     print("no CJK font, skipping map labels")
 
 # ---- desk micro-details ----
+# Desktop layout: left = writing tools, centre = clear map work area,
+# right = books and document storage. Keep the map perimeter unobstructed.
 # Small, readable marks of hand-built joinery and daily use; kept below the
 # existing hero silhouettes so the light balance and composition stay intact.
 for i in range(4):
@@ -473,9 +475,9 @@ for mi, mx in enumerate((-1.96, 1.96)):
 
 # a shallow celadon brush washer, with a dark water pool and a raised rim
 # tucked beside the inkstone (a close-up reward without competing with the map)
-disc("brush_washer", (-2.92, 1.12, 0.900), (0.20, 0.15), CELADON)
-disc("brush_washer_pool", (-2.92, 1.12, 0.906), (0.145, 0.105), INKSTONE)
-bpy.ops.mesh.primitive_torus_add(major_radius=0.155, minor_radius=0.014, major_segments=28, minor_segments=10, location=(-2.92, 1.12, 0.914))
+disc("brush_washer", (-3.02, 0.62, 0.900), (0.20, 0.15), CELADON)
+disc("brush_washer_pool", (-3.02, 0.62, 0.906), (0.145, 0.105), INKSTONE)
+bpy.ops.mesh.primitive_torus_add(major_radius=0.155, minor_radius=0.014, major_segments=28, minor_segments=10, location=(-3.02, 0.62, 0.914))
 washer_rim = bpy.context.object
 washer_rim.name = "brush_washer_rim"
 washer_rim.data.materials.append(CELADON)
@@ -489,31 +491,31 @@ for ri, rz in enumerate((0.68, 1.02, 1.36)):
 
 # stacked book page cuts: three fine lines catch the warm key light and sell the
 # page block without changing the book silhouette.
-for pi, py in enumerate((1.52, 1.56, 1.60)):
-    box("book_page_cut_%d" % pi, (2.05, py, 1.087), (0.48, 0.006, 0.0015), STAIN, rot=(0, 0, 0.02), bev=0)
+for pi, py in enumerate((1.59, 1.63, 1.67)):
+    box("book_page_cut_%d" % pi, (2.35, py, 1.087), (0.48, 0.006, 0.0015), STAIN, rot=(0, 0, 0.02), bev=0)
 
 # stacked volumes: hard covers, cloth wrap, and a cut page block
-box("book_a", (2.05, 1.55, 0.925), (0.70, 0.50, 0.055), LACQUER, rot=(0, 0, 0.06), bev=0.006, uv=1)
-box("book_a_pages", (2.05, 1.55, 0.957), (0.655, 0.455, 0.035), PAPER, rot=(0, 0, 0.06), bev=0.002)
-box("book_b", (2.05, 1.53, 0.993), (0.68, 0.48, 0.052), CLOTH_FB, rot=(0, 0, -0.04), bev=0.006, uv=1)
-box("book_b_pages", (2.05, 1.53, 1.022), (0.635, 0.435, 0.032), PAPER, rot=(0, 0, -0.04), bev=0.002)
-box("book_c", (2.04, 1.56, 1.056), (0.64, 0.45, 0.048), LACQUER, rot=(0, 0, 0.02), bev=0.006, uv=1)
-box("book_c_pages", (2.04, 1.56, 1.083), (0.60, 0.41, 0.030), PAPER, rot=(0, 0, 0.02), bev=0.002)
+box("book_a", (2.35, 1.62, 0.925), (0.70, 0.50, 0.055), LACQUER, rot=(0, 0, 0.06), bev=0.006, uv=1)
+box("book_a_pages", (2.35, 1.62, 0.957), (0.655, 0.455, 0.035), PAPER, rot=(0, 0, 0.06), bev=0.002)
+box("book_b", (2.35, 1.60, 0.993), (0.68, 0.48, 0.052), CLOTH_FB, rot=(0, 0, -0.04), bev=0.006, uv=1)
+box("book_b_pages", (2.35, 1.60, 1.022), (0.635, 0.435, 0.032), PAPER, rot=(0, 0, -0.04), bev=0.002)
+box("book_c", (2.34, 1.63, 1.056), (0.64, 0.45, 0.048), LACQUER, rot=(0, 0, 0.02), bev=0.006, uv=1)
+box("book_c_pages", (2.34, 1.63, 1.083), (0.60, 0.41, 0.030), PAPER, rot=(0, 0, 0.02), bev=0.002)
 # title slip pasted on the top volume
-box("book_slip", (1.90, 1.72, 1.081), (0.10, 0.26, 0.002), PAPER, rot=(0, 0, 0.02), bev=0)
+box("book_slip", (2.20, 1.79, 1.081), (0.10, 0.26, 0.002), PAPER, rot=(0, 0, 0.02), bev=0)
 if get_font() is not None:
-    relief("book_title", "万历会计录", (1.895, 1.612, 1.0835), 0.042, INK, rot=(math.pi / 2, 0, math.pi / 2 + 0.02), extrude=0.0012)
+    relief("book_title", "万历会计录", (2.195, 1.682, 1.0835), 0.042, INK, rot=(math.pi / 2, 0, math.pi / 2 + 0.02), extrude=0.0012)
 
-box("wood_box", (2.55, 0.55, 1.02), (0.78, 0.62, 0.34), WOOD_FRAME, rot=(0, 0, -0.09), bev=0.014, uv=1)
-box("wood_box_lid", (2.55, 0.55, 1.20), (0.82, 0.66, 0.05), WOOD_FRAME, rot=(0, 0, -0.09), bev=0.012, uv=1)
-box("wood_box_clasp", (2.20, 0.55, 1.06), (0.06, 0.14, 0.10), BRASS, rot=(0, 0, -0.09), bev=0)
-box("wood_box_corner_a", (2.92, 0.30, 1.08), (0.10, 0.10, 0.06), BRASS, rot=(0, 0, -0.09), bev=0)
-box("wood_box_corner_b", (2.18, 0.80, 1.08), (0.10, 0.10, 0.06), BRASS, rot=(0, 0, -0.09), bev=0)
+box("wood_box", (2.82, 0.28, 1.02), (0.78, 0.62, 0.34), WOOD_FRAME, rot=(0, 0, -0.09), bev=0.014, uv=1)
+box("wood_box_lid", (2.82, 0.28, 1.20), (0.82, 0.66, 0.05), WOOD_FRAME, rot=(0, 0, -0.09), bev=0.012, uv=1)
+box("wood_box_clasp", (2.47, 0.28, 1.06), (0.06, 0.14, 0.10), BRASS, rot=(0, 0, -0.09), bev=0)
+box("wood_box_corner_a", (3.19, 0.03, 1.08), (0.10, 0.10, 0.06), BRASS, rot=(0, 0, -0.09), bev=0)
+box("wood_box_corner_b", (2.45, 0.53, 1.08), (0.10, 0.10, 0.06), BRASS, rot=(0, 0, -0.09), bev=0)
 
 # brush rest + brushes laid across it, tips tapered
-box("brush_rest", (-1.95, 1.35, 0.93), (0.52, 0.16, 0.09), WOOD_FRAME, bev=0.01, uv=1)
+box("brush_rest", (-2.65, 1.35, 0.93), (0.52, 0.16, 0.09), WOOD_FRAME, bev=0.01, uv=1)
 for i in range(4):
-    bx = -2.10 + i * 0.10
+    bx = -2.80 + i * 0.10
     by = 1.35 + (i % 2) * 0.03
     rot_z = 0.12 * (i - 1.5)
     cyl("brush_%d" % i, (bx, by, 1.12), 0.020, 0.40, WOOD_LIGHT, rot=(0.10, rot_z, 0), verts=14)
@@ -521,21 +523,21 @@ for i in range(4):
     cyl("brush_tuft_%d" % i, (bx - math.sin(rot_z) * 0.245, by + math.cos(rot_z) * 0.245 + 0.036, 1.112), 0.016, 0.075, BRUSH_HAIR, rot=(0.12, rot_z, 0), verts=12)
 
 # inkstone with a wet pool, plus a resting ink stick
-box("inkstone", (-2.25, 0.05, 0.895), (0.60, 0.44, 0.065), INKSTONE, rot=(0, 0, 0.12), bev=0.014, uv=1)
-box("ink_pool", (-2.25, 0.05, 0.933), (0.38, 0.26, 0.008), mat_basic("ink_pool", (0.010, 0.012, 0.014), rough=0.14), rot=(0, 0, 0.12), bev=0)
-box("ink_stick", (-2.05, -0.14, 0.935), (0.20, 0.055, 0.028), INK, rot=(0, 0, 0.30), bev=0.004)
+box("inkstone", (-2.35, 0.12, 0.895), (0.60, 0.44, 0.065), INKSTONE, rot=(0, 0, 0.12), bev=0.014, uv=1)
+box("ink_pool", (-2.35, 0.12, 0.933), (0.38, 0.26, 0.008), mat_basic("ink_pool", (0.010, 0.012, 0.014), rough=0.14), rot=(0, 0, 0.12), bev=0)
+box("ink_stick", (-2.15, -0.07, 0.935), (0.20, 0.055, 0.028), INK, rot=(0, 0, 0.30), bev=0.004)
 
 # seals: carved shou-shan stone and a jade one, with the vermilion pad
-cyl("seal_red", (1.30, -0.30, 0.925), 0.075, 0.16, LACQUER, rot=(0.06, 0, 0), verts=24)
-box("seal_red_cap", (1.30, -0.30, 1.005), (0.15, 0.13, 0.03), LACQUER, rot=(0.06, 0, 0.20), bev=0.005)
-cyl("seal_jade", (1.55, -0.42, 0.910), 0.060, 0.13, JADE, rot=(-0.05, 0.10, 0), verts=24)
-cyl("seal_pad", (1.42, -0.02, 0.895), 0.13, 0.05, SEAL_CLAY, verts=24)
-cyl("seal_pad_rim", (1.42, -0.02, 0.902), 0.135, 0.02, BRASS, verts=28)
+cyl("seal_red", (2.18, -0.30, 0.925), 0.075, 0.16, LACQUER, rot=(0.06, 0, 0), verts=24)
+box("seal_red_cap", (2.18, -0.30, 1.005), (0.15, 0.13, 0.03), LACQUER, rot=(0.06, 0, 0.20), bev=0.005)
+cyl("seal_jade", (2.43, -0.42, 0.910), 0.060, 0.13, JADE, rot=(-0.05, 0.10, 0), verts=24)
+cyl("seal_pad", (2.30, -0.02, 0.895), 0.13, 0.05, SEAL_CLAY, verts=24)
+cyl("seal_pad_rim", (2.30, -0.02, 0.902), 0.135, 0.02, BRASS, verts=28)
 
 # paperweight and a rolled edict
-box("weight_stone", (-0.55, -0.35, 0.905), (0.34, 0.14, 0.06), INKSTONE, rot=(0, 0, -0.05), bev=0.012)
-cyl("edict_roll", (-1.05, -0.52, 0.905), 0.045, 0.72, PAPER, rot=(0, -0.22, math.pi / 2), verts=20)
-cyl("edict_tie", (-1.05, -0.52, 0.905), 0.048, 0.03, LACQUER, rot=(0, -0.22, math.pi / 2), verts=20)
+box("weight_stone", (-0.62, -0.28, 0.905), (0.34, 0.14, 0.06), INKSTONE, rot=(0, 0, -0.05), bev=0.012)
+cyl("edict_roll", (-0.98, -0.44, 0.905), 0.045, 0.72, PAPER, rot=(0, -0.22, math.pi / 2), verts=20)
+cyl("edict_tie", (-0.98, -0.44, 0.905), 0.048, 0.03, LACQUER, rot=(0, -0.22, math.pi / 2), verts=20)
 
 # ---- right scroll rack: capped top and base, scrolls on each shelf ----
 box("rack_upright_a", (3.35, 1.95, 1.00), (0.13, 0.13, 1.30), WOOD_FRAME, bev=0.012, uv=1)
