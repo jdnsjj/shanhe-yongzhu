@@ -178,6 +178,7 @@ export interface QuarterEvent {
   id: string
   narrative: string
   title?: string
+  choices?: Array<{ id: string; label: string }>
   [key: string]: unknown
 }
 
@@ -245,6 +246,7 @@ export interface GameState {
   pool: Minister[]
   appointments: Partial<Record<PositionId, string>>
   firedOnce: string[]
+  historicalChoices: Record<string, string>
   taxCutMonths: number
   history: string[]
 

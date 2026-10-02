@@ -71,7 +71,6 @@ export function BottomBar() {
   const state = useGame((s) => s.state)
   const busy = useGame((s) => s.busy)
   const aiStatus = useGame((s) => s.aiStatus)
-  const settle = useGame((s) => s.settleQuarter)
   const openDialog = useGame((s) => s.openDialog)
   const offlineMode = useGame((s) => s.offlineMode)
   if (!state) return null
@@ -80,7 +79,7 @@ export function BottomBar() {
   return (
     <footer className="bottombar">
       <div className="bottom-left">
-        {offlineMode && <span className="badge offline">离线推演</span>}
+        {offlineMode && <span className="badge offline">AI 未配置</span>}
         {pending > 0 && <span className="badge">{pending} 项待推演</span>}
         {state.quarterEdicts.length > 0 && <span className="badge">{state.quarterEdicts.length} 道圣旨</span>}
       </div>
@@ -88,7 +87,7 @@ export function BottomBar() {
         <button type="button" className="ink-btn" onClick={() => openDialog('tasks')}>时政任务（季度政务）</button>
       </div>
       <div className="bottom-right">
-        <button type="button" className="ink-btn primary" disabled={busy} onClick={() => void settle()}>
+        <button type="button" className="ink-btn primary" disabled={busy} onClick={() => openDialog('settlement')}> 
           {busy ? '推演中……' : '颁诏并结算本季度'}
         </button>
       </div>
@@ -144,9 +143,9 @@ export function StartScreen() {
         <p className="subtitle">天启帝崩，信王继统 · 崇祯元年</p>
         <p className="hint">一个回合，一个季度</p>
         <div className="start-actions">
-          <button type="button" className="ink-btn primary big" disabled={busy} onClick={() => void newGame()}>开始新局</button>
+          <button type="button" className="ink-btn primary big" disabled={busy} onClick={() => { if (window.confirm('开始新局将覆盖当前进度，确定继续吗？')) void newGame() }}>开始新局</button>
           {hasSave && (
-            <button type="button" className="ink-btn big" disabled={busy} onClick={() => void continueGame()}>继续前局</button>
+            <button type="button" className="ink-btn big" disabled={busy} onClick={() => { if (window.confirm('读取前局存档并覆盖当前内存状态，确定继续吗？')) void continueGame() }}>继续前局</button>
           )}
         </div>
       </div>

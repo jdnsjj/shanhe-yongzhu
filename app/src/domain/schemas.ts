@@ -74,7 +74,15 @@ export const quarterResultSchema = z.looseObject({
   events: z.array(eventSchema).max(LIMITS.events, '事件数量超出安全上限').default([]),
   battles: z.array(battleSchema).max(LIMITS.battles, '战斗数量超出安全上限').default([]),
   task_updates: z.array(taskUpdateSchema).max(LIMITS.taskUpdates, '任务更新数量超出安全上限').default([]),
-  next_quarter_tasks: z.array(z.looseObject({ id: z.string().trim().min(1) })).default([]),
+  next_quarter_tasks: z.array(z.looseObject({
+    id: z.string().trim().min(1), title: z.string().default('待议政务'), description: z.string().default(''),
+    origin: z.string().default('季度推演'), category: z.string().default('政务'), parentTaskId: z.string().default(''), continuationReason: z.string().default(''),
+    status: z.enum(TASK_STATUSES).default('active'), priority: z.string().default('normal'),
+    progress: finiteNumber.min(0).max(100).default(0), obstacles: z.array(z.string()).default([]),
+    evidenceRefs: z.array(z.string()).default([]), solutionCandidates: z.array(z.record(z.string(), z.unknown())).default([]),
+    selectedSolutionId: z.string().default(''), requiredDialogue: z.boolean().default(true),
+    continuation: z.string().default(''), completionReason: z.string().default(''), nextObjective: z.string().default(''),
+  })).default([]),
   end_evaluation: z
     .looseObject({ status: z.enum(['ongoing', 'victory', 'defeat']).default('ongoing'), reason: z.string().optional() })
     .default({ status: 'ongoing' }),

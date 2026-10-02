@@ -156,6 +156,14 @@ body {
 .section { margin: 1rem 0 0.5rem; font-size: 0.95rem; color: var(--ink-soft); }
 .muted { color: var(--ink-soft); font-size: 0.85rem; }
 .narrative { font-size: 1rem; line-height: 1.7; }
+.report-choices { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+.setting-row { display: flex; align-items: center; gap: 0.4rem; margin: 0.7rem 0; }
+.report-archive { display: grid; gap: 0.5rem; }
+.report-archive-item { border: 1px solid rgba(104, 73, 45, 0.25); padding: 0.45rem 0.6rem; background: rgba(255, 250, 236, 0.32); }
+.report-archive-item summary { cursor: pointer; color: var(--ink); }
+.report-event { padding: 0.45rem 0.6rem; margin: 0.35rem 0; border-left: 3px solid var(--seal); background: rgba(255, 250, 236, 0.45); }
+.report-event strong { display: block; color: var(--ink); font-size: 0.92rem; }
+.report-event p { margin: 0.2rem 0 0; }
 .row { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; }
 .applied { margin: 0.3rem 0 0 1rem; padding: 0; font-size: 0.85rem; color: var(--ink-soft); }
 
@@ -213,4 +221,37 @@ body {
   padding: 0.45rem 0.9rem; cursor: pointer;
   background: rgba(239, 230, 208, 0.97); border: 1px solid var(--line); border-radius: 2px;
   font-size: 0.87rem; box-shadow: 0 3px 10px rgba(30, 20, 8, 0.25);
+}
+/* 小屏布局：地图仍保持全屏，但将浮动面板收拢为可滚动抽屉式区域。 */
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  .app { min-height: 100dvh; }
+  .topbar { left: 0.35rem; right: 0.35rem; top: 0.35rem; gap: 0.35rem; padding: 0.35rem; align-items: flex-start; }
+  .seal { width: 1.8rem; height: 1.8rem; font-size: 1rem; }
+  .chips { gap: 0.2rem; max-height: 3.8rem; overflow: hidden; }
+  .chip { font-size: 0.68rem; padding: 0.1rem 0.25rem; }
+  .date { font-size: 0.7rem; white-space: nowrap; }
+  .rightmenu { top: 4rem; right: 0.35rem; width: 7rem; max-height: calc(100dvh - 5rem); overflow-y: auto; }
+  .menu-btn { padding: 0.35rem; font-size: 0.78rem; }
+  .infopanel { left: 0.35rem; top: 4rem; width: min(11rem, calc(100vw - 7.8rem)); padding: 0.5rem; }
+  .infopanel h3 { font-size: 0.88rem; }
+  .info-row { font-size: 0.72rem; }
+  .modal { align-items: flex-start; padding: 0.5rem; overflow-y: auto; }
+  .paper, .paper.wide { width: 100%; max-height: calc(100dvh - 1rem); margin-top: 2.5rem; }
+  .paper-head { padding: 0.55rem 0.7rem; }
+  .paper-head h2 { font-size: 1rem; }
+  .paper-body { padding: 0.7rem; }
+  .policy-grid, .minister-grid { grid-template-columns: 1fr; }
+  .row { flex-wrap: wrap; }
+  .chat-log { height: 40dvh; min-height: 180px; }
+  .toasts { left: 0.5rem; right: 0.5rem; transform: none; top: 4rem; }
+  .toast { font-size: 0.78rem; }
+}
+
+@media (max-width: 420px) {
+  .rightmenu { width: 6.2rem; }
+  .infopanel { width: calc(100vw - 7rem); }
+  .date { display: none; }
+  .menu-section { font-size: 0.65rem; }
+  button { min-height: 2.2rem; }
 }

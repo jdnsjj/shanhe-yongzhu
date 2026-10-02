@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="zh-cn" Codepage="936" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <String Id="TauriLanguage">2052</String>
+  <String Id="TauriCodepage">936</String>
+  <String Id="LaunchApp">启动山河永驻</String>
+  <String Id="DowngradeErrorMessage">已安装更新版本的山河永驻。</String>
+  <String Id="PathEnvVarFeature">将山河永驻可执行文件的安装位置添加到 PATH 环境变量。</String>
+  <String Id="InstallAppFeature">安装山河永驻。</String>
+</WixLocalization>

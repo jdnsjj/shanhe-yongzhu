@@ -40,6 +40,13 @@ function fresh(): GameState {
 }
 
 describe('确定性 PRNG', () => {
+  it('后金战斗接受播种随机源', () => {
+    const a = fresh()
+    const b = structuredClone(a)
+    a.jinPower = b.jinPower = 100
+    expect(jinBattle(a, 0.01, createRng(42))).toBe(jinBattle(b, 0.01, createRng(42)))
+  })
+
   it('同种子产生同序列', () => {
     const a = createRng(42)
     const b = createRng(42)
@@ -143,19 +150,19 @@ describe('京师保卫战', () => {
   it('后金势力为零时此战未起', () => {
     const s = fresh()
     s.jinPower = 0
-    expect(jinBattle(s, 1)).toContain('此战未起')
+    expect(jinBattle(s, 1, createRng(1))).toContain('此战未起')
   })
 
   it('京师非我方时此战未起', () => {
     const s = fresh()
     s.provinces = s.provinces.map((p) => (p.id === 'jingzhi' ? { ...p, owner: 'jin' as const } : p))
-    expect(jinBattle(s, 1)).toContain('此战未起')
+    expect(jinBattle(s, 1, createRng(1))).toContain('此战未起')
   })
 
   it('极高守备加成可却敌', () => {
     const s = fresh()
     s.jinPower = 10
-    expect(jinBattle(s, 100)).toContain('损兵折将而退')
+    expect(jinBattle(s, 100, createRng(2))).toContain('损兵折将而退')
     expect(s.history.some((h) => h.includes('却敌'))).toBe(true)
   })
 
@@ -163,7 +170,7 @@ describe('京师保卫战', () => {
     const s = fresh()
     s.jinPower = 120
     s.provinces = s.provinces.map((p) => (p.id === 'jingzhi' ? { ...p, garrison: 2, militaryMorale: 10, fort: 0 } : p))
-    expect(jinBattle(s, 0.01)).toContain('陷落')
+    expect(jinBattle(s, 0.01, createRng(3))).toContain('陷落')
   })
 })
 
@@ -337,6 +344,60 @@ describe('离线结果必须真正改变世界状态（回归）', () => {
     const applied = applyAiTransition(s, r.effects).state
     // 加派赋税得银 80 万两，叠加税收后国库必定高于纯税收
     expect(applied.treasury).toBeGreaterThan(s.treasury + quarterlyIncome(s))
+  })
+})
+
+describe('离线事件与战报', () => {
+  it('关键历史年份会生成一次性里程碑事件', () => {
+    const s = fresh()
+    s.year = 1641
+    const result = simulateQuarterOffline(s, 4)
+    expect(result.events).toContainEqual(expect.objectContaining({ id: 'historical-songjin', title: '松锦决战' }))
+    expect(result.narrative).toContain('松锦战局')
+  })
+  it('1636 年会生成朝鲜乞师里程碑事件', () => {
+    const s = fresh()
+    s.year = 1636
+    const result = simulateQuarterOffline(s, 77)
+    expect(result.events).toContainEqual(expect.objectContaining({
+      id: 'historical-korea-aid',
+      title: '朝鲜乞师',
+      choices: [{ id: 'aid', label: '遣援军守盟约（军粮压力上升）' }, { id: 'hold', label: '暂缓出兵整饬关内（盟约生隙）' }],
+    }))
+    expect(result.narrative).toContain('朝鲜使者请援')
+  })
+
+  it('历史事件标记随提交落库且不重复', () => {
+    const s = fresh()
+    s.year = 1636
+    const result = simulateQuarterOffline(s, 77)
+    const first = commitQuarter(s, result, []).state
+    expect(first.firedOnce).toContain('historical-korea-aid')
+    const persistedEvent = first.quarterReports[0]?.events.find((event) => event.id === 'historical-korea-aid')
+    expect(persistedEvent?.choices).toHaveLength(2)
+    const second = simulateQuarterOffline(first, 77)
+    expect(second.events.some((event) => event.id === 'historical-korea-aid')).toBe(false)
+  })
+
+  it('同一存档和种子产生相同事件与战报', () => {
+    const s = fresh()
+    s.provinces = s.provinces.map((p, i) => ({ ...p, id: i === 0 ? 'jingzhi' : p.id, publicSupport: 10 }))
+    s.rebelPower = 100
+    const a = simulateQuarterOffline(s, 99)
+    const b = simulateQuarterOffline(s, 99)
+    expect(a.events).toEqual(b.events)
+    expect(a.battles).toEqual(b.battles)
+  })
+
+  it('低民心会产生结构化民变事件并只触发一次', () => {
+    const s = fresh()
+    s.provinces = s.provinces.map((p) => ({ ...p, publicSupport: 0 }))
+    const first = simulateQuarterOffline(s, 1)
+    expect(first.events.some((event) => event.id.startsWith('offline-revolt:'))).toBe(true)
+    const applied = applyAiTransition(s, first.effects).state
+    applied.firedOnce.push(...first.events.filter((event) => event.id.startsWith('offline-revolt:')).map((event) => event.id))
+    const second = simulateQuarterOffline(applied, 1)
+    expect(second.events.some((event) => event.id.startsWith('offline-revolt:'))).toBe(false)
   })
 })
 

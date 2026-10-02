@@ -63,6 +63,9 @@ export function stateSnapshot(state: GameState): Record<string, unknown> {
     quarter_summaries: state.quarterSummaries,
     pending_actions: state.pendingActions,
     history: state.history.slice(-12),
+    historical_choices: state.historicalChoices,
+    fired_once: state.firedOnce,
+    previous_events: state.quarterReports.slice(-4).flatMap((report) => report.events),
   }
 }
 
@@ -80,6 +83,7 @@ export class AiOperations {
   ): Promise<LlmResult> {
     const payload = {
       task,
+      snapshot,
       court_context: {
         date: snapshot['date'], treasury: snapshot['treasury'], avg_pop: snapshot['avg_pop'],
         avg_morale: snapshot['avg_morale'], court_stability: snapshot['court_stability'],

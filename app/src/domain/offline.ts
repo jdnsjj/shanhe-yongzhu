@@ -15,7 +15,7 @@
 import { AI_SCHEMA_VERSION, END_YEAR, POSITIONS } from './constants.ts'
 import { averageMilitaryMorale, averagePublicSupport, mingProvinces, quarterKey } from './state.ts'
 import { applyAiTransition } from './transition.ts'
-import type { AiEffect, GameState, QuarterResult, Province } from './types.ts'
+import type { AiEffect, Battle, GameState, QuarterEvent, QuarterResult, Province } from './types.ts'
 
 /** mulberry32：小巧、快速、可播种的确定性 PRNG。 */
 export function createRng(seed: number): () => number {
@@ -101,7 +101,7 @@ function provincesTurn(state: GameState, rng: () => number): void {
 }
 
 /** 流寇滋生、民变与攻城（对应 _rebel_turn）。 */
-function rebelTurn(state: GameState): void {
+function rebelTurn(state: GameState, rng: () => number, battles: Battle[], events: QuarterEvent[]): void {
   const mp = mingProvinces(state)
   if (mp.length === 0) return
 
@@ -111,36 +111,61 @@ function rebelTurn(state: GameState): void {
 
   // 民变：民心极低的省份可能直接举义
   for (const p of mp) {
-    if (p.publicSupport < 18 && Math.random() < 0.1) {
+    if (p.publicSupport < 18 && rng() < 0.1 && !state.firedOnce.includes(`offline-revolt:${p.id}`)) {
       p.owner = 'rebel'
       p.garrison = Math.max(state.rebelPower * 0.25, 6)
       state.rebelPower = Math.max(state.rebelPower - 8, 0)
-      state.history.push(`${p.name}民变骤起，举城从贼！`)
+      const narrative = `${p.name}民变骤起，举城从贼！`
+      state.history.push(narrative)
+      events.push({ id: `offline-revolt:${p.id}`, title: '民变骤起', narrative })
+      state.firedOnce.push(`offline-revolt:${p.id}`)
       return
     }
   }
 
   // 流寇攻城
-  if (state.rebelPower >= 85 && Math.random() < 0.45) {
+  if (state.rebelPower >= 85 && rng() < 0.45) {
     const target = lowestSupport(mp)
     if (!target) return
-    const atk = state.rebelPower * 0.35 * (0.9 + Math.random() * 0.25)
+    const atk = state.rebelPower * 0.35 * (0.9 + rng() * 0.25)
     const def =
       target.garrison *
       (1 + target.fort * 0.12) *
       clamp(target.militaryMorale / 60, 0.6, 1.3) *
-      (0.9 + Math.random() * 0.25)
-    if (atk > def) {
+      (0.9 + rng() * 0.25)
+    const outcome = atk > def ? 'attacker_win' : 'defender_win'
+    battles.push({ source: 'rebel', target: target.id, outcome })
+    if (outcome === 'attacker_win') {
       target.owner = 'rebel'
       target.garrison = state.rebelPower * 0.3
       target.publicSupport = clamp(target.publicSupport - 15, 0, 100)
       state.rebelPower = Math.max(state.rebelPower - 12, 0)
-      state.history.push(`流寇攻陷${target.name}！守军溃散，望风而降者不可胜数。`)
+      const narrative = `流寇攻陷${target.name}！守军溃散，望风而降者不可胜数。`
+      state.history.push(narrative)
+      events.push({ id: 'offline-rebel-assault', title: '流寇攻城', narrative })
     } else {
       state.rebelPower = Math.max(state.rebelPower - 8, 0)
       target.garrison = Math.max(target.garrison * 0.85, 2)
-      state.history.push(`流寇围攻${target.name}，为守军力战所却。`)
+      const narrative = `流寇围攻${target.name}，为守军力战所却。`
+      state.history.push(narrative)
+      events.push({ id: 'offline-rebel-defense', title: '守军拒寇', narrative })
     }
+  }
+}
+
+/** 将史料中的关键年份转成离线可见的季度事件；事件只播报一次。 */
+function historicalMilestones(state: GameState, events: QuarterEvent[], notes: string[]): void {
+  const milestones: Array<{ id: string; year: number; title: string; narrative: string; choices?: Array<{ id: string; label: string }> }> = [
+    { id: 'historical-yichao', year: 1629, title: '裁驿与己巳之变', narrative: '驿站裁撤与后金入塞接踵而至：流民失业，京师告急，朝廷必须在救急与整饬之间取舍。' },
+    { id: 'historical-wuqiao', year: 1631, title: '吴桥兵变', narrative: '孔有德等因军饷与军纪兵变，登州火器与海防体系由此出现重大裂隙。' },
+    { id: 'historical-korea-aid', year: 1636, title: '朝鲜乞师', narrative: '朝鲜使者请援，关外战事与辽饷压力同时逼近：出兵可守盟约，却会牵动本就吃紧的军粮。', choices: [{ id: 'aid', label: '遣援军守盟约（军粮压力上升）' }, { id: 'hold', label: '暂缓出兵整饬关内（盟约生隙）' }] },
+    { id: 'historical-songjin', year: 1641, title: '松锦决战', narrative: '松锦战局牵动关外存亡，催战可求速胜，持重却要承受粮饷与军心压力。', choices: [{ id: 'press', label: '催战决胜（追加军粮）' }, { id: 'hold', label: '持重守关（保存实力）' }] },
+    { id: 'historical-peace', year: 1642, title: '和议风波', narrative: '陈新甲议和事泄，朝廷在主战与和谈之间的裂痕彻底公开。', choices: [{ id: 'negotiate', label: '暂允和议（稳住朝堂）' }, { id: 'reject', label: '驳回和议（坚持主战）' }] },
+  ]
+  for (const milestone of milestones) {
+    if (state.year !== milestone.year || state.firedOnce.includes(milestone.id)) continue
+    events.push({ id: milestone.id, title: milestone.title, narrative: milestone.narrative, ...(milestone.choices ? { choices: milestone.choices } : {}) })
+    notes.push(milestone.narrative)
   }
 }
 
@@ -156,17 +181,17 @@ function jinTurn(state: GameState): void {
 }
 
 /** 京师保卫战（对应 jin_battle）。 */
-export function jinBattle(state: GameState, defendBonus: number): string {
+export function jinBattle(state: GameState, defendBonus: number, rng: () => number): string {
   const jingzhi = state.provinces.find((p) => p.id === 'jingzhi')
   if (!jingzhi || jingzhi.owner !== 'ming' || state.jinPower <= 0) {
     return '（后金主力未动，此战未起。）'
   }
-  const atk = state.jinPower * 0.42 * (0.9 + Math.random() * 0.25)
+  const atk = state.jinPower * 0.42 * (0.9 + rng() * 0.25)
   let def =
     jingzhi.garrison *
     (1 + jingzhi.fort * 0.15) *
     clamp(jingzhi.militaryMorale / 60, 0.6, 1.3) *
-    (0.9 + Math.random() * 0.25) *
+    (0.9 + rng() * 0.25) *
     defendBonus
   const bingshi = ministerAt(state, 'bingshi')
   if (bingshi) def *= 1 + bingshi.command / 400
@@ -289,6 +314,8 @@ export function simulateQuarterOffline(state: GameState, seed: number): QuarterR
   const working = structuredClone(state)
   const effects: AiEffect[] = []
   const notes: string[] = []
+  const events: QuarterEvent[] = []
+  const battles: Battle[] = []
 
   // 1) 玩家行动（政策 / 任命 / 调兵 / 出兵）
   for (const action of working.pendingActions) {
@@ -407,8 +434,9 @@ export function simulateQuarterOffline(state: GameState, seed: number): QuarterR
 
   applyPositions(next, notes, rng)
   provincesTurn(next, rng)
-  rebelTurn(next)
+  rebelTurn(next, rng, battles, events)
   jinTurn(next)
+  historicalMilestones(next, events, notes)
 
   // 4) 任务推进：有对话证据且进展良好则推进进度
   const taskUpdates = next.politicalTasks.map((t) => {
@@ -435,8 +463,8 @@ export function simulateQuarterOffline(state: GameState, seed: number): QuarterR
     // 关键：把推演后的真实状态差异交回标准管线落库，
     // 否则叙事描述了变化、世界状态却毫无变化。
     effects: diffEffects(state, next),
-    events: [],
-    battles: [],
+    events,
+    battles,
     taskUpdates,
     nextQuarterTasks: [],
     endEvaluation: { status: end.status, reason: end.reason },

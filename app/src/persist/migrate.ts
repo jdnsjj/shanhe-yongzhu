@@ -170,6 +170,7 @@ export function migrateGodotSave(raw: unknown): SaveFile {
     pool,
     appointments,
     firedOnce: arr(raw['fired_once']).map(String),
+    historicalChoices: isRecord(raw['historical_choices']) ? Object.fromEntries(Object.entries(raw['historical_choices']).filter((entry): entry is [string, string] => typeof entry[1] === 'string')) : {},
     taxCutMonths: num(raw['tax_cut_months'], 0),
     history: arr(raw['history']).map(String),
 

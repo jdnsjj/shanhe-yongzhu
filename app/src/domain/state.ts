@@ -137,6 +137,7 @@ export function createNewGame(provinces: Province[], court: Minister[], pool: Mi
     pool: pool.map((m) => ({ ...m })),
     appointments: {},
     firedOnce: [],
+    historicalChoices: {},
     taxCutMonths: 0,
     history: [],
 

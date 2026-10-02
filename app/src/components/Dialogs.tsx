@@ -6,7 +6,7 @@
 import { useState } from 'react'
 import { POLICIES, POSITIONS, type PolicyId, type PositionId } from '../domain/constants.ts'
 import { mingProvinces, taskById } from '../domain/state.ts'
-import { selectors, useGame } from '../store.ts'
+import { isAudioEnabled, selectors, setAudioEnabled, useGame } from '../store.ts'
 
 function Dialog({ title, children, onClose, wide = false }: {
   title: string
@@ -36,6 +36,8 @@ export function DialogHost() {
     case 'policies': return <PolicyDialog onClose={close} />
     case 'ministers': return <MinisterDialog onClose={close} />
     case 'tasks': return <TaskDialog onClose={close} />
+    case 'edict': return <EdictDialog onClose={close} payload={payload as { text: string; taskId: string; solutionId: string }} />
+    case 'settlement': return <SettlementDialog onClose={close} />
     case 'history': return <HistoryDialog onClose={close} />
     case 'chat': return <ChatDialog onClose={close} payload={payload as { ministerId: string; taskId: string }} />
     case 'provinceOps': return <ProvinceOpsDialog onClose={close} payload={payload as string} />
@@ -111,7 +113,7 @@ function MinisterDialog({ onClose }: { onClose: () => void }) {
           return (
             <div key={m.id} className="minister-card">
               <div className="minister-head">
-                <span className="seal small">{m.name.slice(0, 1)}</span>
+                <span className="seal small" role="img" aria-label={`${m.name}立绘暂缺，显示姓氏占位`}>{m.name.slice(0, 1)}</span>
                 <div>
                   <b>{m.name}</b>
                   <div className="muted">{m.title} · {m.faction}</div>
@@ -126,7 +128,7 @@ function MinisterDialog({ onClose }: { onClose: () => void }) {
                   召见
                 </button>
                 {held ? (
-                  <button type="button" className="ink-btn small" onClick={() => dismiss(held)}>罢{held ? POSITIONS[held].name : ''}</button>
+                  <button type="button" className="ink-btn small" onClick={() => { if (window.confirm(`确认罢免${held ? POSITIONS[held].name : '该职'}？`)) dismiss(held) }}>罢{held ? POSITIONS[held].name : ''}</button>
                 ) : (
                   <select className="ink-select" defaultValue="" onChange={(e) => {
                     if (e.target.value !== '') appoint(e.target.value as PositionId, m.id)
@@ -178,7 +180,8 @@ function TaskDialog({ onClose }: { onClose: () => void }) {
           <p>{t.description}</p>
           <div className="muted">起源：{t.origin} · 进度 {t.progress}</div>
           {t.obstacles.length > 0 && <div className="muted">阻碍：{t.obstacles.join('、')}</div>}
-          {t.continuation && <div className="muted">下一步：{t.continuation}</div>}
+          {t.continuation && <div className="muted">后续：{t.continuation}</div>}
+          {t.nextObjective && <div className="muted">目标：{t.nextObjective}</div>}
           <div className="row">
             <button type="button" className="ink-btn small" onClick={() => openDialog('chat', { ministerId: state.ministers[0]?.id ?? '', taskId: t.id })}>
               召对议事
@@ -202,6 +205,19 @@ function HistoryDialog({ onClose }: { onClose: () => void }) {
   if (!state) return null
   return (
     <Dialog title="条陈奏疏" onClose={onClose} wide>
+      {state.quarterReports.length > 0 && <>
+        <h3 className="section">历季战报</h3>
+        <div className="report-archive">
+          {state.quarterReports.slice().reverse().map((report, i) => (
+            <details key={`${report.quarter}-${i}`} className="report-archive-item">
+              <summary>{report.quarter} · {report.quarterSummary}</summary>
+              {report.events.map((event) => <div key={event.id} className="report-event"><strong>{event.title ?? '大事'}</strong><p className="muted">{event.narrative}</p></div>)}
+              {report.battles.map((battle, j) => <p key={j} className="muted">{battle.source} → {battle.target}：{battle.outcome}</p>)}
+            </details>
+          ))}
+        </div>
+      </>}
+      <h3 className="section">编年记录</h3>
       <ol className="history">
         {state.history.slice().reverse().map((h, i) => <li key={i}>{h}</li>)}
       </ol>
@@ -213,6 +229,8 @@ function ChatDialog({ onClose, payload }: { onClose: () => void; payload: { mini
   const state = useGame((s) => s.state)
   const chats = useGame((s) => s.chats)
   const chat = useGame((s) => s.chatWithMinister)
+  const draft = useGame((s) => s.draftTaskEdict)
+  const busy = useGame((s) => s.busy)
   const [text, setText] = useState('')
   if (!state) return null
   const minister = state.ministers.find((m) => m.id === payload.ministerId)
@@ -222,7 +240,7 @@ function ChatDialog({ onClose, payload }: { onClose: () => void; payload: { mini
 
   const send = (): void => {
     const q = text.trim()
-    if (q === '') return
+    if (q === '' || busy) return
     setText('')
     void chat(minister, task?.id ?? '', q)
   }
@@ -250,11 +268,33 @@ function ChatDialog({ onClose, payload }: { onClose: () => void; payload: { mini
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') send() }}
         />
-        <button type="button" className="ink-btn" onClick={send}>垂询</button>
+        <button type="button" className="ink-btn" disabled={busy} onClick={send}>垂询</button>
+        <button type="button" className="ink-btn" disabled={busy || !task || !state.currentQuarterDialogues.some((d) => d.taskId === task.id)} onClick={() => { if (task) void draft(task.id) }}>据议拟旨</button>
       </div>
       {!task && <p className="muted">当前无活动任务，无法形成议事证据。</p>}
     </Dialog>
   )
+}
+
+function EdictDialog({ onClose, payload }: { onClose: () => void; payload: { text: string; taskId: string; solutionId: string } }) {
+  const [text, setText] = useState(payload.text)
+  const issue = useGame((s) => s.issueEdict)
+  const busy = useGame((s) => s.busy)
+  return <Dialog title="审阅圣旨" onClose={onClose} wide>
+    <textarea className="ink-input" rows={9} style={{ width: '100%' }} value={text} onChange={(e) => setText(e.target.value)} aria-label="圣旨正文" />
+    <button type="button" className="ink-btn primary" disabled={busy || !text.trim()} onClick={() => issue(text, [payload.taskId], payload.solutionId)}>颁布圣旨</button>
+  </Dialog>
+}
+
+function SettlementDialog({ onClose }: { onClose: () => void }) {
+  const [text, setText] = useState('')
+  const busy = useGame((s) => s.busy)
+  const offline = useGame((s) => s.offlineMode)
+  const settle = useGame((s) => s.settleQuarter)
+  return <Dialog title="季度结算圣旨" onClose={onClose} wide>
+    <textarea className="ink-input" rows={9} style={{ width: '100%' }} value={text} onChange={(e) => setText(e.target.value)} aria-label="结算圣旨正文" placeholder="本季圣旨……" />
+    <button type="button" className="ink-btn primary" disabled={busy || offline} onClick={() => void settle(text)}>{busy ? '推演中……' : text.trim() ? '颁诏并结算' : '依已颁圣旨结算'}</button>
+  </Dialog>
 }
 
 function ProvinceOpsDialog({ onClose, payload }: { onClose: () => void; payload: string }) {
@@ -329,7 +369,9 @@ function DispatchDialog({ onClose, payload }: { onClose: () => void; payload: st
               type="button"
               className="ink-btn small"
               disabled={state.actionsLeft <= 0 || troops < 3 || troops > maxTroops(src)}
-              onClick={() => dispatchTroops(src.id, target.id, troops, state.ministers[0]?.id ?? '')}
+              onClick={() => {
+                if (window.confirm(`确认从${src.name}向${target.name}派出${troops}万兵？`)) dispatchTroops(src.id, target.id, troops, state.ministers[0]?.id ?? '')
+              }}
             >
               发兵
             </button>
@@ -385,7 +427,9 @@ function MoveTroopsDialog({ onClose, payload }: { onClose: () => void; payload: 
             type="button"
             className="ink-btn"
             disabled={state.actionsLeft <= 0 || troops < 1 || troops > maxTroops}
-            onClick={() => moveTroops(source.id, tgt.id, troops)}
+            onClick={() => {
+              if (window.confirm(`确认从${source.name}向${tgt.name}调动${troops}万兵？`)) moveTroops(source.id, tgt.id, troops)
+            }}
           >
             移驻 {tgt.name}（现兵 {Math.trunc(tgt.garrison)} 万）
           </button>
@@ -396,12 +440,14 @@ function MoveTroopsDialog({ onClose, payload }: { onClose: () => void; payload: 
 }
 
 interface ReportPayload {
-  result: { narrative: string; quarterSummary: string; events: Array<{ id: string; narrative: string }>; battles: Array<{ source: string; target: string; outcome: string }>; endEvaluation: { status: string } }
+  result: { narrative: string; quarterSummary: string; events: Array<{ id: string; narrative: string; title?: string; choices?: Array<{ id: string; label: string }> }>; battles: Array<{ source: string; target: string; outcome: string }>; endEvaluation: { status: string } }
   applied: string[]
 }
 
 function ReportDialog({ onClose, payload }: { onClose: () => void; payload: ReportPayload }) {
   const r = payload?.result
+  const state = useGame((s) => s.state)
+  const chooseHistoricalEvent = useGame((s) => s.chooseHistoricalEvent)
   if (!r) return null
   const outcomeText: Record<string, string> = { attacker_win: '攻方胜', defender_win: '守方胜', stalemate: '相持' }
   return (
@@ -410,7 +456,20 @@ function ReportDialog({ onClose, payload }: { onClose: () => void; payload: Repo
       {r.events.length > 0 && (
         <>
           <h3 className="section">大事</h3>
-          {r.events.map((e) => <p key={e.id} className="muted">{e.narrative}</p>)}
+          {r.events.map((e) => (
+            <div key={e.id} className="report-event">
+              {e.title && <strong>{e.title}</strong>}
+              <p className="muted">{e.narrative}</p>
+              {e.choices && e.choices.length > 0 && (
+                <div className="report-choices" aria-label="事件选项">
+                  {e.choices.map((choice) => {
+                    const chosen = state?.historicalChoices[e.id]
+                    return <button key={choice.id} type="button" className={`ink-btn small ${chosen === choice.id ? 'primary' : ''}`} disabled={Boolean(chosen)} onClick={() => chooseHistoricalEvent(e.id, choice.id)}>{choice.label}{chosen === choice.id ? '（已择）' : ''}</button>
+                  })}
+                </div>
+              )}
+            </div>
+          ))}
         </>
       )}
       {r.battles.length > 0 && (
@@ -446,13 +505,15 @@ function GameOverDialog({ onClose }: { onClose: () => void }) {
 function SettingsDialog({ onClose }: { onClose: () => void }) {
   const offlineMode = useGame((s) => s.offlineMode)
   const newGame = useGame((s) => s.newGame)
+  const [audioOn, setAudioOn] = useState(isAudioEnabled())
   return (
     <Dialog title="设置" onClose={onClose}>
       <p className="muted">
-        推演模式：{offlineMode ? '离线确定性引擎（未检测到 config.json 中的 API Key）' : 'AI 推演（已连接）'}
+        推演模式：{offlineMode ? 'AI 未配置，召对与推演不可用' : 'AI 推演（已连接）'}
       </p>
       <p className="muted">存档位于应用数据目录 save.json；旧 Godot 存档会被自动迁移。</p>
-      <button type="button" className="ink-btn" onClick={() => void newGame()}>重开新局</button>
+      <label className="setting-row"><input type="checkbox" checked={audioOn} onChange={(e) => { setAudioOn(e.target.checked); setAudioEnabled(e.target.checked) }} /> 播放战报音效</label>
+      <button type="button" className="ink-btn" onClick={() => { if (window.confirm('重开新局将覆盖当前存档，确定继续吗？')) void newGame() }}>重开新局</button>
     </Dialog>
   )
 }

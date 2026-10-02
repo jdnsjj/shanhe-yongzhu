@@ -3,32 +3,35 @@
  * 仅开发期使用，不参与产品代码。
  */
 const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe'
-const PORT = 9334
+const PORT = Number(process.env.DSH_CDP_PORT ?? 9334)
 const URL = process.argv[2] ?? 'http://localhost:5199/'
 const { spawn } = await import('node:child_process')
 const fs = await import('node:fs')
 const os = await import('node:os')
 const pathMod = await import('node:path')
 
-const PROFILE = pathMod.join(os.tmpdir(), 'shanhe-edge-profile2')
+const PROFILE = pathMod.join(os.tmpdir(), `shanhe-edge-profile-${PORT}`)
 const proc = spawn(EDGE, [
   '--headless=new', '--disable-gpu', '--hide-scrollbars',
   `--remote-debugging-port=${PORT}`, '--window-size=1280,720',
+  '--no-first-run', '--no-default-browser-check',
   '--user-data-dir=' + PROFILE, 'about:blank',
 ], { stdio: 'ignore' })
+proc.on('error', (error) => { throw new Error(`Edge 启动失败: ${error.message}`) })
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 async function findPage() {
   for (let i = 0; i < 40; i++) {
     try {
-      const list = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json()
+      const response = await fetch(`http://127.0.0.1:${PORT}/json/list`, { signal: AbortSignal.timeout(1000) })
+      const list = await response.json()
       const p = list.find((t) => t.type === 'page')
       if (p) return p
     } catch {}
     await sleep(250)
   }
-  throw new Error('no CDP page')
+  throw new Error('no CDP page after 10s')
 }
 
 const page = await findPage()

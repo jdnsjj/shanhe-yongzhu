@@ -208,6 +208,16 @@ describe('季度推进与落库', () => {
     expect(report.status).toBe('ongoing')
   })
 
+  it('提交时持久化一次性事件标记且不重复追加', () => {
+    const s = fresh()
+    s.firedOnce = ['historical-songjin']
+    const { state: next } = commitQuarter(s, result({ events: [
+      { id: 'historical-songjin', title: '松锦决战', narrative: '战报' },
+      { id: 'historical-wuqiao', title: '吴桥兵变', narrative: '兵变' },
+    ] }), [])
+    expect(next.firedOnce).toEqual(['historical-songjin', 'historical-wuqiao'])
+  })
+
   it('不修改入参状态', () => {
     const s = fresh()
     commitQuarter(s, result(), [])

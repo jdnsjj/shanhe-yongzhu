@@ -212,6 +212,12 @@ export function commitQuarter(
     endEvaluation: result.endEvaluation,
   }
   next.quarterReports.push(report)
+  // 离线一次性民变事件通过标准提交管线持久化触发标记，避免下一季度重复播报。
+  for (const event of result.events) {
+    if ((event.id.startsWith('offline-revolt:') || event.id.startsWith('historical-')) && !next.firedOnce.includes(event.id)) {
+      next.firedOnce.push(event.id)
+    }
+  }
   next.quarterSummaries.push(result.quarterSummary || result.narrative)
   next.history.push(`【${report.quarter}季度结算】${result.narrative}`)
 
